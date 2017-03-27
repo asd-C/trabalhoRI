@@ -3,3 +3,4 @@
 lib/
 bin/
 src/.DS_Store
+output.txt
