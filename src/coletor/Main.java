@@ -1,5 +1,8 @@
 package coletor;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,13 +17,14 @@ import utils.Reader;
 import utils.Writer;
 
 public class Main {
-	
+
 	public static void coletor() {
 		HashMap<String, Document> documents;
 		Set<String> seeds;
 		ArrayList<String> new_seeds;
 		int round;
 		String[] urls;
+		 
 		
 		Fetcher.delay = 2000;								// delay to fetch new page
 		Seeds.seeds_size = 1;								// number of new seeds are generated.
