@@ -1,4 +1,4 @@
-package coletor;
+package utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,13 +9,17 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 public class Writer {
-	public static final String separator_url_content = "&*%";
-	public static final String separator_document = "@#$";
+	public static final String separator_url_content = Reader.separator_url_content;
+	public static final String separator_document = Reader.separator_document;
 	
 	private String filename;
 	
 	public Writer(String filename) {
 		this.filename = filename;
+	}
+	
+	public boolean save(HashMap<String, String> contents) {
+		return saveTo(format(contents));
 	}
 	
 	public String format(HashMap<String, String> contents) {

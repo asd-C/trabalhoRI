@@ -24,6 +24,10 @@ public class Tokenizer {
 		} catch (IOException e) {}
 	}
 	
+	public Set<String> process(String content) {
+		return removeRepeatedWords(removeStopwords(tokenize(content)));
+	}
+	
 	public String[] tokenize(String content) {
 		return content.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
 	}
@@ -42,6 +46,18 @@ public class Tokenizer {
 		String[] stockArr = new String[results.size()];
 		stockArr = results.toArray(stockArr);
 		return stockArr;
+	}
+	
+	public Set<String> removeRepeatedWords(String[] words) {
+		HashSet<String> no_repeated_words = new HashSet<String>();
+		
+		for (String word: words) {
+			if (!no_repeated_words.contains(word)) {
+				no_repeated_words.add(word);
+			}
+		}
+		
+		return no_repeated_words;
 	}
 
 }

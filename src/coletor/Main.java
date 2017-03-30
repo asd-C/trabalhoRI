@@ -5,16 +5,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.jsoup.nodes.Document;
 
 import entity.Seeds;
-import indexador.Tokenizer;
+import indexador.Indexador;
+import utils.Reader;
+import utils.Writer;
 
 public class Main {
 	
-	public static void main(String... args) {
+	public static void coletor() {
 		HashMap<String, Document> documents;
 		Set<String> seeds;
 		ArrayList<String> new_seeds;
@@ -33,6 +34,7 @@ public class Main {
 		
 		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
+		// collecting from web
 		while (round < 0) {
 			System.out.println("\nRound: " + round);
 			
@@ -54,30 +56,29 @@ public class Main {
 			
 			round++;
 		}
+	}
+	
+	public static void main(String... args) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		Indexador indexador = new Indexador();
+//		Writer writer = new Writer("./output.txt");
+//		Reader reader = new Reader("./output.txt");
 		
-		String content = "Obama was born in Honolulu, Hawaii, two years after the territory "
-				+ "was admitted to the Union as the 50th state. He grew up mostly in Hawaii, "
-				+ "but also spent one year of his childhood in Washington State and four "
-				+ "years in Indonesia. After graduating from Columbia University in 1983, "
-				+ "he worked as a community organizer in Chicago. In 1988 Obama enrolled "
-				+ "in Harvard Law School, where he was the first black president of the "
-				+ "Harvard Law Review. After graduation, he became a civil rights attorney "
-				+ "and professor, teaching constitutional law at the University of Chicago "
-				+ "Law School from 1992 to 2004. Obama represented the 13th District for "
-				+ "three terms in the Illinois Senate from 1997 to 2004, when he ran for "
-				+ "the U.S. Senate. Obama received national attention in 2004, with his "
-				+ "unexpected March primary win, his well-received July Democratic National "
-				+ "Convention keynote address, and his landslide November election to the Senate. "
-				+ "In 2008, Obama was nominated for president, a year after his campaign began, "
-				+ "and after a close primary campaign against Hillary Clinton. He was elected "
-				+ "over Republican John McCain, and was inaugurated on January 20, 2009. "
-				+ "Nine months later, Obama was named the 2009 Nobel Peace Prize laureate.";
+		map.put("1", "sarah is smart.");
+		map.put("2", "obama was a president called barack obama.");
+		map.put("3", "fritas is smart.");
+		map.put("4", "i love smart phone.");
+		map.put("5", "dilma is a president.");
+		map.put("6", "dehua chen called chen.");
+		map.put("7", "sarah is a good student.");
+		map.put("8", "sarah love dog.");
 		
-		Tokenizer tokenizer = new Tokenizer();
-		tokenizer.removeStopwords(tokenizer.tokenize(content));
+		indexador.add(map);
+		indexador.showInvertedList();
 		
-//		for (String tmp: tokens) {
-//			System.out.println(tmp);
-//		}
+//		writer.save(map);
+//		
+//		map = reader.convertToHashMap(reader.getFromFile());
+//		map.forEach((k,v) -> System.out.println("url: " + k + ", content: " + v));
 	}
 }
