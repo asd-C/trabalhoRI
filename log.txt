@@ -1,0 +1,9 @@
+O que temos:
+- coletor basico: coleta as paginas das urls.
+- indexador basico: tokeniza o texto, elimina stopwords e remove palavras repetidas e gera lista invertida,
+HashMap<String, ArrayList<String>>.
+- writer e reader: salva e recupera os textos das paginas web, HashMap<String, String> <--> arquivo.
+
+O que temos que implementar:
+- Tratar robots.txt
+- Dividir urls de acordo com dominios
