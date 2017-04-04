@@ -5,9 +5,19 @@ import java.util.ArrayList;
 import java.net.*;
 
 public class FilterUrls {
+	// efetividade do parser
+	// performaca do componente
+	// do colotetor em geral
 
 	private static final CharSequence DISALLOW = null;
 
+	/**
+	 * Recebe um dominio com o http:// ou https:// e retorna um array com todos
+	 * os diretores proibidos desse dominio.
+	 * 
+	 * @param domain
+	 * @return diretores proibidos do dominio
+	 */
 	private static ArrayList<String> getDisallow(String domain) {
 		String subLine[];
 		ArrayList<String> disallow = new ArrayList<String>();
@@ -45,6 +55,13 @@ public class FilterUrls {
 
 	}
 
+	/**
+	 * Recebe um array de posições e verifica se estar ordenado. com todos os
+	 * diretores proibidos desse dominio.
+	 * 
+	 * @param posicoes
+	 * @return true ou false de acordo com a ordenação
+	 */
 	private static boolean isSorted(Integer[] posicoes) {
 		for (int i = 0; i < posicoes.length - 1; i++) {
 			if (posicoes[i] > posicoes[i + 1]) {
@@ -55,6 +72,14 @@ public class FilterUrls {
 
 	}
 
+	/**
+	 * Verifica a partir de uma lista com diretores proibidos do dominio, se uma
+	 * url contem algum deles.
+	 * 
+	 * @param dominiosProibidos
+	 * @param url
+	 * @return
+	 */
 	private static boolean contemPalavra(ArrayList<String> dominiosProibidos, String url) {
 		Integer[] posicoes = null;
 		int posicao;
@@ -83,6 +108,12 @@ public class FilterUrls {
 		return false;
 	}
 
+	/**
+	 * Filtra um lista de dominios e retorna os que nao sao proibidos de 
+	 * acordo com o arquivo robots.txt do dominino
+	 * @param domain
+	 * @return
+	 */
 	public static ArrayList<String> filtrar(DomainUrls domain) {
 		ArrayList<String> dominiosProibidos = new ArrayList<String>();
 		ArrayList<String> urlsPermitidas = new ArrayList<String>();
