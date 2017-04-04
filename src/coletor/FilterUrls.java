@@ -99,7 +99,7 @@ public class FilterUrls {
 						contem++;
 					}
 				}
-				if (contem > 1 && isSorted(posicoes))
+				if (contem > 1 && isSorted(posicoes) && contem == palavras.length )
 					return true;
 
 			}
