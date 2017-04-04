@@ -33,9 +33,7 @@ public class Fetcher {
 	
 			Thread.sleep(delay);
 		} catch (IOException e) {
-//			e.printStackTrace();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 		
 		return doc;
