@@ -9,8 +9,6 @@ public class FilterUrls {
 	// performaca do componente
 	// do colotetor em geral
 
-	private static final CharSequence DISALLOW = null;
-
 	/**
 	 * Recebe um dominio com o http:// ou https:// e retorna um array com todos
 	 * os diretores proibidos desse dominio.
@@ -56,11 +54,11 @@ public class FilterUrls {
 	}
 
 	/**
-	 * Recebe um array de posições e verifica se estar ordenado. com todos os
+	 * Recebe um array de posiï¿½ï¿½es e verifica se estar ordenado. com todos os
 	 * diretores proibidos desse dominio.
 	 * 
 	 * @param posicoes
-	 * @return true ou false de acordo com a ordenação
+	 * @return true ou false de acordo com a ordenaï¿½ï¿½o
 	 */
 	private static boolean isSorted(Integer[] posicoes) {
 		for (int i = 0; i < posicoes.length - 1; i++) {

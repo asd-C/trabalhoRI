@@ -1,8 +1,5 @@
 package coletor;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,7 +10,6 @@ import org.jsoup.nodes.Document;
 
 import entity.Seeds;
 import indexador.Indexador;
-import utils.Reader;
 import utils.Writer;
 
 public class Main {

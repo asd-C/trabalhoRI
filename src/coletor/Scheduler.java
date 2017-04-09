@@ -23,6 +23,6 @@ public class Scheduler {
 	 * @return	lista de novas urls para coletar.
 	 * */
 	public ArrayList<String> generateNewSeeds() {
-		return Seeds.generateNewSeeds();
+		return Seeds.generateNewSeeds().getUrls();
 	}
 }

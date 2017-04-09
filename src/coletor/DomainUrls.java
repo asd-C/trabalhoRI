@@ -6,6 +6,10 @@ public class DomainUrls {
 	private String domain;
 	private ArrayList<String> urls;
 	
+	public DomainUrls() {
+		setUrls(new ArrayList<String>());
+	}
+	
 	public DomainUrls(String domain, ArrayList<String> urls) {
 		this.domain = domain;
 		this.urls = urls;
@@ -23,6 +27,4 @@ public class DomainUrls {
 	public void setUrls(ArrayList<String> urls) {
 		this.urls = urls;
 	}
-	
-	
 }
