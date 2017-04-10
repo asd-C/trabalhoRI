@@ -22,7 +22,11 @@ public class Scheduler {
 	 * 
 	 * @return	lista de novas urls para coletar.
 	 * */
-	public ArrayList<String> generateNewSeeds() {
+	public ArrayList<String> generateNewSeedsList() {
 		return Seeds.generateNewSeeds().getUrls();
+	}
+	
+	public DomainUrls generateNewSeeds() {
+		return Seeds.generateNewSeeds();
 	}
 }

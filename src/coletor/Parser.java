@@ -1,5 +1,9 @@
 package coletor;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,12 +24,29 @@ public class Parser {
 	public Set<String> getURLsFromPage(Document doc) {
 		Set<String> urls = new HashSet<String>();
 		Elements links = doc.select("a[href]");
+		String tmp;
 		
 		for (Element link: links) {
-			urls.add(link.attr("abs:href"));
+			tmp = link.attr("abs:href");
+			if (tmp.isEmpty()) continue;
+			try {
+				urls.add(removeAnchor(tmp));
+			} catch (Exception e) {}
 		}
 		
 		return urls;
+	}
+
+	public String removeAnchor(String sUrl) throws URISyntaxException, MalformedURLException {
+		URL url = new URL(sUrl);
+		
+		String protocol = url.getProtocol(); 
+		if (!protocol.equalsIgnoreCase("http") && !protocol.equalsIgnoreCase("https")) 
+			throw new MalformedURLException();
+		
+		URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), null);
+		String canonical = uri.toString();
+		return canonical;
 	}
 	
 	/**

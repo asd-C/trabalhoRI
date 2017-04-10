@@ -24,11 +24,10 @@ public class FilterUrls {
 
 		try (BufferedReader in = new BufferedReader(
 				new InputStreamReader(new URL(domain + "/robots.txt").openStream()))) {
-			String line = null;
-			while ((line = in.readLine()) != null) {
-				// System.out.println(line);
+			String line = in.readLine();
+			while (line != null && !line.isEmpty()) {
 				subLine = line.split(" ");
-				if (subLine[0].equals("Disallow:")) {
+				if (subLine[0].equals("Disallow:") && subLine.length > 1) {
 					String parte = subLine[1];
 					letraInicial = parte.charAt(0);
 					letraFinal = parte.charAt(0);
@@ -42,23 +41,23 @@ public class FilterUrls {
 						fim--;
 					}
 
-					// System.out.println(subLine[1]);
-					disallow.add(subLine[1].substring(inicio, fim));
+					if(!subLine[1].substring(inicio, fim).equals("/")){
+						disallow.add(subLine[1].substring(inicio, fim));
+					}
 				}
+				line = in.readLine();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) {}
 
 		return disallow;
 	}
 
 	/**
-	 * Recebe um array de posi��es e verifica se estar ordenado. com todos os
+	 * Recebe um array de posicoes e verifica se estar ordenado. com todos os
 	 * diretores proibidos desse dominio.
 	 * 
 	 * @param posicoes
-	 * @return true ou false de acordo com a ordena��o
+	 * @return true ou false de acordo com a ordenacao
 	 */
 	private static boolean isSorted(Integer[] posicoes) {
 		for (int i = 0; i < posicoes.length - 1; i++) {

@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import coletor.DomainUrls;
@@ -26,6 +27,30 @@ public class Seeds {
 		return total; 
 	}
 	
+	public static synchronized void showVisitedSeeds() {
+		System.out.println("---------------- Visited urls ----------------");
+		for (Entry<String, DomainSeeds> en: domains_visited_urls.entrySet()) {
+			Set<String> urls = en.getValue().getUrls();
+			System.out.println(en.getKey());
+			for (String url: urls) {
+				System.out.print(url + ", ");
+			}
+			System.out.println();
+		}
+	}
+	
+	public static synchronized void showUnvisitedSeeds() {
+		System.out.println("---------------- Unvisited urls ----------------");
+		for (Entry<String, DomainSeeds> en: domains_unvisited_urls.entrySet()) {
+			Set<String> urls = en.getValue().getUrls();
+			System.out.println(en.getKey());
+			for (String url: urls) {
+				System.out.print(url + ", ");
+			}
+			System.out.println();
+		}
+	}
+	
 	private static HashMap<String, DomainSeeds> domains_visited_urls = 
 			new HashMap<String, DomainSeeds>();
 	private static HashMap<String, DomainSeeds> domains_unvisited_urls = 
@@ -45,7 +70,17 @@ public class Seeds {
 	private static String getDomain(String url) throws URISyntaxException {
 		URI uri = new URI(url);
 	    String domain = uri.getHost();
-	    return domain.startsWith("www.") ? domain.substring(4) : domain;
+	    String tmp = "";
+
+	    try {
+	    	tmp = domain.startsWith("www.") ? domain.substring(4) : domain;
+	    } catch (Exception e) { 
+	    	System.out.println("url: " + url);
+	    	System.out.println("domain: " + domain);
+	    	
+	    	e.printStackTrace(); 
+	    }
+	    return tmp;
 	}
 	
 	public static synchronized void addUrls(Set<String> seeds) {
