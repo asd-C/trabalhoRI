@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
@@ -47,6 +48,7 @@ public class Main {
 		round = 0; 											// round counter
 		urls = new String[] {"https://en.wikipedia.org/wiki/Barack_obama"};		// first input
 		
+		AbstractSequenceClassifier<CoreLabel> classifier = prepareClassifier();
 		Fetcher fetcher = new Fetcher();
 		Parser parser = new Parser();
 		Scheduler scheduler = new Scheduler();
@@ -56,13 +58,13 @@ public class Main {
 		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 10) {
+		while (round < 3) {
 			
 //			Seeds.showUnvisitedSeeds();
 			
 			System.out.println("\n-------------------- Round: " + round + " --------------------\n");
 			timer.startTimer(Timer.FILTERURLS);
-			new_seeds = FilterUrls.filtrar(scheduler.generateNewSeeds());
+			new_seeds = FilterUrls.filtrar(scheduler.generateNewSeeds("en.wikipedia.org"));
 			timer.finishTimer(Timer.FILTERURLS);
 			System.out.println("Number of seeds: " + new_seeds.size());
 			
@@ -76,7 +78,12 @@ public class Main {
 			timer.finishTimer(Timer.PARSER);
 			System.out.println("Number of new seeds: " + seeds.size());
 			
-//			parser.getTextsFromPages(documents);
+			timer.startTimer(Timer.FILTER);
+			HashMap<String, String> contents = parser.getTextsFromPages(documents);
+			for (Entry<String, String> ctt: contents.entrySet()) {
+				List<List<CoreLabel>> results = classifier.classify(ctt.getValue());
+			}
+			timer.finishTimer(Timer.FILTER);
 			
 //			writer.saveTo(writer.format(parser.getTextsFromPages(documents)));
 			

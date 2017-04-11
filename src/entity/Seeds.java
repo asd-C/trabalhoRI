@@ -105,6 +105,37 @@ public class Seeds {
 		}
 	}
 	
+	public static synchronized DomainUrls generateNewSeeds(String domain) {
+		ArrayList<String> seeds = new ArrayList<String>();
+		String[] urls_array;
+		DomainSeeds urls = null, urls2 = null;
+		
+		urls = domains_unvisited_urls.get(domain); 
+		
+		// if there is no set with urls, return arraylist with zero element.
+		if (urls == null || urls.getUrls().size() == 0) return new DomainUrls();
+		
+		// collecting urls
+		urls_array = new String[urls.getUrls().size()];
+		urls_array = urls.getUrls().toArray(urls_array);
+		for (int i=0; i<seeds_size; i++) {
+			if (i < urls_array.length) seeds.add(urls_array[i]); 
+		}
+		
+		urls2 = domains_visited_urls.get(urls.getDomain()); 
+		if (urls2 == null) {
+			urls2 = new DomainSeeds(urls.getDomain(), urls.getProtocol());
+			domains_visited_urls.put(urls.getDomain(), urls2);
+		}
+		
+		for (String tmp: seeds) {
+			urls.getUrls().remove(tmp);
+			urls2.getUrls().add(tmp);
+		}
+		
+		return new DomainUrls(urls.getProtocol()+urls.getDomain(), seeds);
+	}
+	
 	public static synchronized DomainUrls generateNewSeeds() {
 		ArrayList<String> seeds = new ArrayList<String>();
 		String[] urls_array;

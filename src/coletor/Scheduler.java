@@ -29,4 +29,8 @@ public class Scheduler {
 	public DomainUrls generateNewSeeds() {
 		return Seeds.generateNewSeeds();
 	}
+	
+	public DomainUrls generateNewSeeds(String domain) {
+		return Seeds.generateNewSeeds(domain);
+	}
 }
