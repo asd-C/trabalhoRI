@@ -11,12 +11,20 @@ import java.util.Map.Entry;
 public class Writer {
 	public static final String separator_url_content = Reader.separator_url_content;
 	public static final String separator_document = Reader.separator_document;
-	private static final String dir = "output/";
+	private static final String dir = "output";
+	
+	private void createDir() {
+		File file = new File(dir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+	}
 	
 	public boolean save(HashMap<String, String> contents, String domain) {
+		createDir();
 		domain = domain.replace("https://", "");
 		domain = domain.replace("http://", "");
-		return saveTo(format(contents), dir + domain);
+		return saveTo(format(contents), dir + "/" + domain);
 	}
 	
 	public String format(HashMap<String, String> contents) {

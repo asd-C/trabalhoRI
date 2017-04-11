@@ -38,7 +38,7 @@ public class Main {
 		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 10) {
+		while (round < 1) {
 			
 			domainUrls = scheduler.generateNewSeeds("en.wikipedia.org");
 			
