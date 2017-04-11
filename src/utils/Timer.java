@@ -10,7 +10,7 @@ public class Timer {
 	public static final int SCHEDULER = 3;
 	public static final int WRITER = 4;
 	public static final int READER = 5;
-	public static final int FILTER = 6;
+	public static final int CLASSIFIER = 6;
 	
 	private static final String[] labels = {
 			"Fetcher", 
@@ -19,7 +19,7 @@ public class Timer {
 			"Scheduler", 
 			"Writer", 
 			"Reader",
-			"Filter"};
+			"Classifier"};
 	
 	public Timer() {
 		timers = new HashMap<Integer, Long>();

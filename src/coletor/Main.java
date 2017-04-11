@@ -1,40 +1,17 @@
 package coletor;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
-import edu.stanford.nlp.ie.AbstractSequenceClassifier;
-import edu.stanford.nlp.ie.crf.CRFClassifier;
-import edu.stanford.nlp.ling.CoreAnnotations.AnswerAnnotation;
-import edu.stanford.nlp.ling.CoreLabel;
 import entity.Seeds;
 import utils.Timer;
-import utils.Writer;
 
 public class Main {
-	
-	private static final String MODEL_PATH = "./lib/classifier/english.all.3class.distsim.crf.ser.gz";
-
-	public static AbstractSequenceClassifier<CoreLabel> prepareClassifier() {
-		String model = MODEL_PATH;
-		AbstractSequenceClassifier<CoreLabel> classifier = null;
-			
-			try {
-				classifier = CRFClassifier.getClassifier(model);
-			} catch (ClassCastException e) { e.printStackTrace(); } 
-			catch (ClassNotFoundException e) { e.printStackTrace(); } 
-			catch (IOException e) { e.printStackTrace(); }
-		
-		return classifier;
-	}
 	
 	public static void coletor() {
 		HashMap<String, Document> documents;
@@ -44,16 +21,15 @@ public class Main {
 		String[] urls;
 		
 		Fetcher.delay = 1000;								// delay to fetch new page
-		Seeds.seeds_size = 5;								// number of new seeds are generated.
+		Seeds.seeds_size = 10;								// number of new seeds are generated.
 		round = 0; 											// round counter
-		urls = new String[] {"https://en.wikipedia.org/wiki/Barack_obama"};		// first input
+		urls = new String[] {"https://en.wikipedia.org/wiki/Category:Living_people"};		// first input
 		
-		AbstractSequenceClassifier<CoreLabel> classifier = prepareClassifier();
 		Fetcher fetcher = new Fetcher();
 		Parser parser = new Parser();
 		Scheduler scheduler = new Scheduler();
+		Classifier classifier = new Classifier();
 		Timer timer = new Timer();
-//		Writer writer = new Writer("./output.txt");
 		
 		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
@@ -78,12 +54,9 @@ public class Main {
 			timer.finishTimer(Timer.PARSER);
 			System.out.println("Number of new seeds: " + seeds.size());
 			
-			timer.startTimer(Timer.FILTER);
-			HashMap<String, String> contents = parser.getTextsFromPages(documents);
-			for (Entry<String, String> ctt: contents.entrySet()) {
-				List<List<CoreLabel>> results = classifier.classify(ctt.getValue());
-			}
-			timer.finishTimer(Timer.FILTER);
+			timer.startTimer(Timer.CLASSIFIER);
+			classifier.process(parser.getTextsFromPages(documents));
+			timer.finishTimer(Timer.CLASSIFIER);
 			
 //			writer.saveTo(writer.format(parser.getTextsFromPages(documents)));
 			
@@ -92,7 +65,7 @@ public class Main {
 			System.out.println("Total of visited seeds: " + Seeds.getVisitedSeeds());
 			System.out.println("Total of unvisited seeds: " + Seeds.getUnvisitedSeeds());
 			
-			Seeds.showVisitedSeeds();
+//			Seeds.showVisitedSeeds();
 			
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
@@ -100,8 +73,9 @@ public class Main {
 	}
 	
 	public static void main(String... args) {
-//		prepareClassifier();
+
 		coletor();
+		
 //		try {
 //			new Parser().removeAnchor("http://en.wikipedia.org/wiki/Barack_obama");
 //		} catch (MalformedURLException | URISyntaxException e) {
