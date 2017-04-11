@@ -11,15 +11,12 @@ import java.util.Map.Entry;
 public class Writer {
 	public static final String separator_url_content = Reader.separator_url_content;
 	public static final String separator_document = Reader.separator_document;
+	private static final String dir = "output/";
 	
-	private String filename;
-	
-	public Writer(String filename) {
-		this.filename = filename;
-	}
-	
-	public boolean save(HashMap<String, String> contents) {
-		return saveTo(format(contents));
+	public boolean save(HashMap<String, String> contents, String domain) {
+		domain = domain.replace("https://", "");
+		domain = domain.replace("http://", "");
+		return saveTo(format(contents), dir + domain);
 	}
 	
 	public String format(HashMap<String, String> contents) {
@@ -35,10 +32,11 @@ public class Writer {
 		return text;
 	}
 	
-	public boolean saveTo(String content) {
+	public boolean saveTo(String content, String filename) {
 		try (PrintWriter pw = new PrintWriter(new FileOutputStream(new File(filename), true));) {
 			pw.print(content);
 		} catch (IOException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;
