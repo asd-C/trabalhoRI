@@ -26,7 +26,7 @@ public class Fetcher {
 		Document doc = null;
 		
 		try {
-			System.out.println("URL: " + url);
+//			System.out.println("URL: " + url);
 			doc = Jsoup.connect(url)
 					.userAgent(AGENT)
 					.header(ACCEPT_LANG, LANG)
