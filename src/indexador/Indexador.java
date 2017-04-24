@@ -1,6 +1,5 @@
 package indexador;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -40,21 +39,7 @@ public class Indexador {
 	 * Mostrar a lista invertida.
 	 * */
 	public void showInvertedList() {
-		invertedList.forEach((key, value) -> showIndex(key));
+		invertedList.show();
 	}
-	
-	/**
-	 * Mostra a lista de urls nas quais se encontra o index.
-	 * 
-	 * @param index	Dado um index, mostra a lista de urls nas quais se encontra este.
-	 * */
-	public void showIndex(String index) {
-		ArrayList<String> tmp = invertedList.get(index);
-		
-		System.out.print("Key: " + index + ", (");
-		for (String url: tmp) {
-			System.out.print(url + ", ");
-		}
-		System.out.println(")");
-	}
+
 }
