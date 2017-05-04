@@ -18,20 +18,31 @@ public class Classifier {
 	public Classifier() {
 		this.classifier = prepareClassifier();
 	}
-	
+
 	private AbstractSequenceClassifier<CoreLabel> prepareClassifier() {
 		String model = MODEL_PATH;
 		AbstractSequenceClassifier<CoreLabel> classifier = null;
-			
-			try {
-				classifier = CRFClassifier.getClassifier(model);
-			} catch (ClassCastException e) { e.printStackTrace(); } 
-			catch (ClassNotFoundException e) { e.printStackTrace(); } 
-			catch (IOException e) { e.printStackTrace(); }
-		
+
+		try {
+			classifier = CRFClassifier.getClassifier(model);
+		} catch (ClassCastException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return classifier;
 	}
 	
+	public List<List<CoreLabel>> classify(String content) {
+		
+		List<List<CoreLabel>> list = classifier.classify(content);
+		
+		return list;
+	}
+
 	public HashMap<String, String> process(HashMap<String, String> contents) {
 		int start = 0, length = 500, size;
 		String content;
