@@ -16,7 +16,7 @@ public class URLsVisitadas {
 	private String URL = "url";
 
 	/*
-	 * Cria a collecao caso ainda nao exista
+	 * Cria a colle��o caso ainda n�o exista
 	 */
 	@SuppressWarnings("deprecation")
 	public URLsVisitadas() {
