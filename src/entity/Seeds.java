@@ -56,6 +56,22 @@ public class Seeds {
 	private static HashMap<String, DomainSeeds> domains_unvisited_urls = 
 			new HashMap<String, DomainSeeds>();
 	
+	public static HashMap<String, DomainSeeds> getDomains_visited_urls() {
+		return domains_visited_urls;
+	}
+
+	public static void setDomains_visited_urls(HashMap<String, DomainSeeds> domains_visited_urls) {
+		Seeds.domains_visited_urls = domains_visited_urls;
+	}
+
+	public static HashMap<String, DomainSeeds> getDomains_unvisited_urls() {
+		return domains_unvisited_urls;
+	}
+
+	public static void setDomains_unvisited_urls(HashMap<String, DomainSeeds> domains_unvisited_urls) {
+		Seeds.domains_unvisited_urls = domains_unvisited_urls;
+	}
+
 	private static DomainSeeds createDomainSeeds(String url, String domain) {
 		String protocol = "";
 	    int i = 0;

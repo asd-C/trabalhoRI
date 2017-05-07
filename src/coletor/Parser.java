@@ -64,7 +64,7 @@ public class Parser {
 		return urls;
 	}
 	
-	static String regex = "[^a-zA-Z0-9-_.,!?]";
+	static String regex = "[^a-zA-Z0-9\\p{Punct}]";
 	
 	/**
 	 * O metodo recupera o conteudo textual de uma pagina Web.
@@ -73,7 +73,7 @@ public class Parser {
 	 * @return 		O conteudo textual da pagina.
 	 * */
 	public String getTextFromPage(Document doc) {
-		return doc.select("body").text().replaceAll(regex, "");
+		return doc.select("body").text().replaceAll(regex, " ");
 	}
 	
 	/**

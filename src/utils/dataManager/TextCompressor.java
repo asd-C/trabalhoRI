@@ -21,11 +21,11 @@ import entity.coletor.Document;
 public class TextCompressor {
 	static final int BUFFER = 2048;
 
-	public static boolean zipFromString(String filename, String filedata) {
-		
+	public static boolean zipFromString(String filepath, String filedata) {
+
 		try {
 			BufferedInputStream origin = null;
-			FileOutputStream dest = new FileOutputStream(filename);
+			FileOutputStream dest = new FileOutputStream(filepath);
 			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
 			byte data[] = new byte[BUFFER];
@@ -47,11 +47,11 @@ public class TextCompressor {
 		}
 	}
 
-	public static String unzipToString(String filename) {
+	public static String unzipToString(String filepath) {
 		
 		String result = null;
 		try {
-			FileInputStream fis = new FileInputStream(filename);
+			FileInputStream fis = new FileInputStream(filepath);
 			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
 
 			result = "";
@@ -99,6 +99,7 @@ public class TextCompressor {
 	
 	public void unzipToFile(String file_in) {
 		try {
+			
 			BufferedOutputStream dest = null;
 			FileInputStream fis = new FileInputStream(file_in);
 			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
@@ -121,46 +122,28 @@ public class TextCompressor {
 		}
 	}
 	
-	public static void compress(Document doc, String to, boolean base64) {
-		String filename = doc.getUrl();
-		if (base64) {
-			filename = base64(filename, false);
-		} 
-		zipFromString(dir + "/" + to + "/" + filename, doc.getText());
+	public static void compress(Document doc, String to) {
 		
-//		return filename;
+		String filename = digestSHA1(doc.getUrl());
+		zipFromString(pathFormat(dir, to, filename), doc.getText());
 	}
 	
-	public static String base64(String in, boolean decode) {
-		if (decode) {
-			return new String(Base64.decodeBase64(in.getBytes()));
-		} else {
-			return new String(Base64.encodeBase64(in.getBytes()));
-		}
+	public static String uncompress(String filename, String from) {
+		
+		return unzipToString(pathFormat(dir, from, filename));
 	}
 	
-	public static String uncompress(String filename, String from, boolean base64) {
-		if (base64) {
-			filename = base64(filename, false);
-		} 
-		return unzipToString(dir + "/" + from + "/" + filename);
-	}
-
-	public static ArrayList<Document> rename(File[] files, String from, String to) {
-		ArrayList<Document> filesC = new ArrayList<Document>();
+	public static String pathFormat(String... args) {
+		String path = args[0];
 		
-		for (File f: files) {
-			File file = new File(dir + "/" + from + "/" + f.getName());
-			String newName = base64(f.getName(), true);
-			boolean suc = file.renameTo(new File(dir + "/" + to + "/" + digest(newName)));
-			if (suc) filesC.add(new Document(newName, "", 0));
-			System.out.println(newName + ": " + file.getName());
+		for (int i = 1; i < args.length; i++) {
+			path += "/" + args[i];
 		}
 		
-		return filesC;
+		return path;
 	}
 	
-	public static String digest(String in) {
+	public static String digestSHA1(String in) {
 		return DigestUtils.sha1Hex(in);
 	}
 	
@@ -173,7 +156,7 @@ public class TextCompressor {
 	private static void createDir() {
 		File file = new File(dir);
 		if (!file.exists()) {
-			file.mkdirs();
+			file.mkdirs();	
 		}
 		file = new File(dir + "/" + dir_proc);
 		if (!file.exists()) {
@@ -184,12 +167,5 @@ public class TextCompressor {
 			file.mkdirs();
 		}
 	}
-	public static void main(String... args) {
-//		changeDir("aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvQ2F0ZWdvcnk6TWlzc2luZ19taWRkbGVfb3JfZmlyc3RfbmFtZXM=");
-//		changeDir("aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvQ2F0ZWdvcnk6TWlzc2luZ19taWRkbGVfb3JfZmlyc3RfbmFtZXM=");
-		//aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvQ2F0ZWdvcnk6TGl2aW5nX3Blb3BsZQ==
-//		compress(new Document("https://en.wikipedia.org/wiki/Category:Living_people","hello world",0), TextCompressor.dir_unproc, true);
-//		System.out.println(uncompress("https://en.wikipedia.org/wiki/Category:Living_people", dir_unproc, true));
-		//		changeDir("google.com");
-	}
+	public static void main(String... args) {	}
 }

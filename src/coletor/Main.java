@@ -1,14 +1,18 @@
 package coletor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
+import entity.Doc;
 import entity.Seeds;
+import global.Global;
 import indexador.Analyser;
 import utils.Timer;
 import utils.Writer;
@@ -32,9 +36,9 @@ public class Main {
 		Fetcher fetcher = new Fetcher();
 		Parser parser = new Parser();
 		Scheduler scheduler = new Scheduler();
-		Classifier classifier = new Classifier();
 		Writer writer = new Writer();
 		Timer timer = new Timer();
+		Analyser analyser = new Analyser();
 		
 		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
@@ -61,14 +65,22 @@ public class Main {
 			System.out.println("Number of new seeds: " + seeds.size());
 			
 			timer.startTimer(Timer.CLASSIFIER);
-			classifier.process(contents);
+			Global.classifier.process(contents);
 			timer.finishTimer(Timer.CLASSIFIER);
 			
 			timer.startTimer(Timer.WRITER);
 //			parser.getTextsFromPages(documents).forEach((k,v) -> System.out.println(k + v));
-			writer.save(parser.getTextsFromPages(documents));
+//			writer.save(parser.getTextsFromPages(documents));
 			timer.finishTimer(Timer.WRITER);
-			
+			List<Doc> docs = analyser.createIndexes(parser.getTextsFromPages(documents));
+			Global.invertedIndexManager.addIndexs(analyser.createInvertedIndex(docs));
+//			try {
+//				//				System.out.println(Global.objectMapper.writeValueAsString(analyser.createInvertedIndex(docs)));
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			System.out.println(Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().size());
 			scheduler.addNewUrls(seeds);
 			
 			System.out.println("Total of visited seeds: " + Seeds.getVisitedSeeds());
@@ -80,21 +92,10 @@ public class Main {
 			round++;
 		}
 	}
-	
-	public static void indexador() {
-		Analyser an = new Analyser();
-		
-	}
-	
+
 	public static void main(String... args) {
 
 		coletor();
 		
-//		try {
-//			new Parser().removeAnchor("http://en.wikipedia.org/wiki/Barack_obama");
-//		} catch (MalformedURLException | URISyntaxException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 }
