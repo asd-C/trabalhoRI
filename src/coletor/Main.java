@@ -9,6 +9,7 @@ import java.util.Set;
 import org.jsoup.nodes.Document;
 
 import entity.Seeds;
+import indexador.Analyser;
 import utils.Timer;
 import utils.Writer;
 
@@ -24,7 +25,7 @@ public class Main {
 		HashMap<String, String> contents;
 		
 		Fetcher.delay = 500;								// delay to fetch new page
-		Seeds.seeds_size = 30;								// number of new seeds are generated.
+		Seeds.seeds_size = 10;								// number of new seeds are generated.
 		round = 0; 											// round counter
 		urls = new String[] {"https://en.wikipedia.org/wiki/Category:Living_people"};		// first input
 		
@@ -38,7 +39,7 @@ public class Main {
 		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 1) {
+		while (round < 2) {
 			
 			domainUrls = scheduler.generateNewSeeds("en.wikipedia.org");
 			
@@ -64,7 +65,8 @@ public class Main {
 			timer.finishTimer(Timer.CLASSIFIER);
 			
 			timer.startTimer(Timer.WRITER);
-			writer.save(parser.getTextsFromPages(documents), domainUrls.getDomain());
+//			parser.getTextsFromPages(documents).forEach((k,v) -> System.out.println(k + v));
+			writer.save(parser.getTextsFromPages(documents));
 			timer.finishTimer(Timer.WRITER);
 			
 			scheduler.addNewUrls(seeds);
@@ -77,6 +79,11 @@ public class Main {
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
+	}
+	
+	public static void indexador() {
+		Analyser an = new Analyser();
+		
 	}
 	
 	public static void main(String... args) {

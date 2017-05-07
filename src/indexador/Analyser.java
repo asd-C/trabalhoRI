@@ -1,6 +1,8 @@
 package indexador;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,8 +10,10 @@ import coletor.Classifier;
 import edu.stanford.nlp.ling.CoreAnnotations.AnswerAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
 import entity.Doc;
+import entity.coletor.Document;
 import entity.indexador.Index;
 import entity.indexador.IndexDoc;
+import utils.dataManager.TextCompressor;
 
 public class Analyser {
 	
@@ -38,7 +42,7 @@ public class Analyser {
 		return doc;
 	}
 	
-	static Classifier classifier = new Classifier();
+	static Classifier classifier;// = new Classifier();
 	public Doc process(String url, String content) {
 		Doc doc = analyze(classifier.classify(content));
 		doc.setUrl(url);
@@ -71,6 +75,30 @@ public class Analyser {
 		return indexs;
 	}
 	
+	public ArrayList<Document> prepareData() {
+		String path = TextCompressor.dir + "/" + TextCompressor.dir_unproc;
+		File dir = new File(path);
+		File[] files = dir.listFiles();
+		int from = 0;
+		int to = (50 > files.length) ? files.length : 50;
+		
+		files = Arrays.copyOfRange(files, from, to);
+		ArrayList<Document> docs = new ArrayList<Document>();
+		
+//		for (File f: files) {
+//			TextCompressor.changeDir(f.getName());
+//		}
+//		
+		for (File f: files) {
+			String filename = TextCompressor.base64(f.getName(), true);
+			String text = TextCompressor.uncompress(f.getName(), TextCompressor.dir_proc, false);
+			docs.add(new Document(filename, text, text.length()));
+			System.out.println(filename + ": " + text.length());
+		}
+		
+		return docs;
+	}
+	
 	public static void main(String... args) {
 		Analyser an = new Analyser();
 		String url1 = "google.com", url2 = "uol.com", url3 = "facebook.com";
@@ -99,15 +127,16 @@ public class Analyser {
 				+ "McCain, and was inaugurated on January 20, 2009. Nine months later, Obama was named "
 				+ "the 2009 Nobel Peace Prize laureate.";
 		
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put(url1, str1);map.put(url2, str2);map.put(url3, str3);
+//		HashMap<String, String> map = new HashMap<String, String>();
+//		map.put(url1, str1);map.put(url2, str2);map.put(url3, str3);
+		an.prepareData();
 		
-		an.reverse(an.process(map)).forEach((key, value) -> {
-			System.out.print(key + ": " + value.getNi() + ", \t");
-			value.getIndexDocs().forEach(elem -> {
-				System.out.print("(" + elem.url + "," + elem.fi + "), ");
-			});
-			System.out.println();
-		});
+//		an.reverse(an.process(map)).forEach((key, value) -> {
+//			System.out.print(key + ": " + value.getNi() + ", \t");
+//			value.getIndexDocs().forEach(elem -> {
+//				System.out.print("(" + elem.url + "," + elem.fi + "), ");
+//			});
+//			System.out.println();
+//		});
 	}
 }
