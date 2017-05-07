@@ -228,6 +228,8 @@ class DomainSeeds {
 	private Set<String> urls;
 	private String protocol;
 	
+	public DomainSeeds() {}
+	
 	public DomainSeeds(String domain, String protocol) {
 		this.domain = domain;
 		this.protocol = protocol;
@@ -237,11 +239,9 @@ class DomainSeeds {
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
 	}
-	
 	public String getProtocol() {
 		return protocol;
 	}
-	
 	public String getDomain() {
 		return domain;
 	}

@@ -8,15 +8,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
-
-import entity.coletor.Document;
 
 public class TextCompressor {
 	static final int BUFFER = 2048;
@@ -67,10 +61,10 @@ public class TextCompressor {
 				result += sb.toString();
 			}
 			zis.close();
+			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
-		return result;
 	}
 	
 	public void zipFromFile(String file_out, String file_in) {
@@ -121,51 +115,6 @@ public class TextCompressor {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void compress(Document doc, String to) {
-		
-		String filename = digestSHA1(doc.getUrl());
-		zipFromString(pathFormat(dir, to, filename), doc.getText());
-	}
-	
-	public static String uncompress(String filename, String from) {
-		
-		return unzipToString(pathFormat(dir, from, filename));
-	}
-	
-	public static String pathFormat(String... args) {
-		String path = args[0];
-		
-		for (int i = 1; i < args.length; i++) {
-			path += "/" + args[i];
-		}
-		
-		return path;
-	}
-	
-	public static String digestSHA1(String in) {
-		return DigestUtils.sha1Hex(in);
-	}
-	
-	static {
-		createDir();
-	}
-	public final static String dir_proc = "proc";
-	public final static String dir_unproc = "unproc";
-	public final static String dir = "data";
-	private static void createDir() {
-		File file = new File(dir);
-		if (!file.exists()) {
-			file.mkdirs();	
-		}
-		file = new File(dir + "/" + dir_proc);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		file = new File(dir + "/" + dir_unproc);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-	}
+
 	public static void main(String... args) {	}
 }

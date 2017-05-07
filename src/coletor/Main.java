@@ -1,6 +1,5 @@
 package coletor;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class Main {
 		Timer timer = new Timer();
 		Analyser analyser = new Analyser();
 		
-		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
+//		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
 		while (round < 2) {
@@ -70,17 +69,16 @@ public class Main {
 			
 			timer.startTimer(Timer.WRITER);
 //			parser.getTextsFromPages(documents).forEach((k,v) -> System.out.println(k + v));
-//			writer.save(parser.getTextsFromPages(documents));
+			writer.saveWithCompression(parser.getTextsFromPages(documents));
 			timer.finishTimer(Timer.WRITER);
 			List<Doc> docs = analyser.createIndexes(parser.getTextsFromPages(documents));
+			// finished create metadocs
+			// finished save documents
+			// TODO save urls
+			// TODO saving every 5 min
+			Global.metaDocManager.addMetaDocsFromDocs(docs);
 			Global.invertedIndexManager.addIndexs(analyser.createInvertedIndex(docs));
-//			try {
-//				//				System.out.println(Global.objectMapper.writeValueAsString(analyser.createInvertedIndex(docs)));
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			System.out.println(Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().size());
+			
 			scheduler.addNewUrls(seeds);
 			
 			System.out.println("Total of visited seeds: " + Seeds.getVisitedSeeds());
@@ -91,11 +89,14 @@ public class Main {
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
+		Global.metaDocManager.saveMetaDocs();
+		Global.seedsManager.saveSeeds();
+		Global.invertedIndexManager.saveInvertedIndex();
 	}
-
+	
 	public static void main(String... args) {
-
-		coletor();
+		Global.loadData();
+		Main.coletor();
 		
 	}
 }

@@ -5,3 +5,4 @@ src/.DS_Store
 output.txt
 lib/classifier/
 output/*
+data/

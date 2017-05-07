@@ -3,14 +3,16 @@ package utils;
 import java.util.HashMap;
 
 import entity.coletor.Document;
+import global.Global;
 import utils.dataManager.TextCompressor;
 
 public class Writer {
 	
-	public boolean save(HashMap<String, String> contents) {
+	public boolean saveWithCompression(HashMap<String, String> contents) {
 		
 		contents.forEach((url, text) -> {
-			TextCompressor.compress(new Document(url, text, 0), TextCompressor.dir_unproc);
+			String filepath = Global.pathFormat(Global.dir_root, Global.dir_document, Global.digestSHA1(url));
+			TextCompressor.zipFromString(filepath, text);
 		});
 		return true;
 	}
