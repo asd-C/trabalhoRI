@@ -12,6 +12,8 @@ public class Timer {
 	public static final int READER = 5;
 	public static final int CLASSIFIER = 6;
 	public static final int INDEXADOR = 7;
+	public static final int METADOCMANAGER = 8;
+	public static final int ACCESSTIMETOINDEX = 9;
 	
 	private static final String[] labels = {
 			"Fetcher", 
@@ -21,7 +23,9 @@ public class Timer {
 			"Writer", 
 			"Reader",
 			"Classifier",
-			"Indexador"};
+			"Indexador",
+			"MetadocManager",
+			"Access Time to Index"};
 	
 	public Timer() {
 		timers = new HashMap<Integer, Long>();

@@ -25,14 +25,12 @@ public class Main {
 		Set<String> seeds;
 		ArrayList<String> new_seeds;
 		int round;
-		String[] urls;
 		DomainUrls domainUrls;
 		HashMap<String, String> contents;
 		
-		Fetcher.delay = 500;								// delay to fetch new page
-		Seeds.seeds_size = 10;								// number of new seeds are generated.
+		Fetcher.delay = 0;								// delay to fetch new page
+		Seeds.seeds_size = 50;								// number of new seeds are generated.
 		round = 0; 											// round counter
-		urls = new String[] {"https://en.wikipedia.org/wiki/Category:Living_people"};		// first input
 		
 		Fetcher fetcher = new Fetcher();
 		Parser parser = new Parser();
@@ -44,7 +42,7 @@ public class Main {
 //		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 2) {
+		while (round < 40) {
 			
 			domainUrls = scheduler.generateNewSeeds("en.wikipedia.org");
 			
@@ -69,10 +67,6 @@ public class Main {
 			contents = Global.classifier.process(contents);
 			timer.finishTimer(Timer.CLASSIFIER);
 			
-			timer.startTimer(Timer.WRITER);
-			writer.saveWithCompression(contents);
-			timer.finishTimer(Timer.WRITER);
-			
 			timer.startTimer(timer.INDEXADOR);
 			List<Doc> docs = analyser.createIndexes(contents);
 			// finished create metadocs
@@ -84,6 +78,10 @@ public class Main {
 			
 			Global.metaDocManager.addMetaDocsFromDocs(docs);
 			scheduler.addNewUrls(seeds);
+
+			timer.startTimer(Timer.WRITER);
+			writer.saveWithCompression(contents);
+			timer.finishTimer(Timer.WRITER);
 			
 			System.out.println("Total of visited seeds: " + Seeds.getVisitedSeeds());
 			System.out.println("Total of unvisited seeds: " + Seeds.getUnvisitedSeeds());
@@ -97,28 +95,17 @@ public class Main {
 		Global.saveStatus();
 	}
 	
+	public static void timeToRetrieveIndex() {
+		Timer timer = new Timer();
+		timer.startTimer(timer.ACCESSTIMETOINDEX);
+		Global.invertedIndexManager.getIndexByName("Wikipedia");
+		timer.finishTimer(timer.ACCESSTIMETOINDEX);
+	}
+	
 	public static void main(String... args) {
 		Global.loadData();
-//		try {
-//			Global.objectMapper.writeValue(new File(Global.pathFormat(Global.dir_root, "test")), new IndexDetail(0));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-//		Global.loadData();
-//		Global.sumSizeWithCompression();
-//		Global.sumSizeWithoutCompression();
-////		try {
-//			Timer timer = new Timer();
-//			timer.startTimer(0);
-//			Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().get("Wikipedia");
-//			System.out.println(timer.finishTimer(0));
-//			System.out.println(Global.objectMapper.writeValueAsString(Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().get("Wikipedia")));
-//		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		Main.coletor();
+//		Main.coletor();
+//		
+		timeToRetrieveIndex();
 	}
 }

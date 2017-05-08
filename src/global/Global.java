@@ -10,6 +10,7 @@ import coletor.Classifier;
 import entity.coletor.SeedsManager;
 import entity.indexador.InvertedIndexManager;
 import entity.indexador.MetaDocManager;
+import utils.Timer;
 import utils.dataManager.TextCompressor;
 
 public class Global {
@@ -136,7 +137,10 @@ public class Global {
 	}
 
 	public static void saveStatus() {
+		Timer timer = new Timer();
+		timer.startTimer(Timer.METADOCMANAGER);
 		Global.metaDocManager.saveMetaDocs();
+		timer.finishTimer(Timer.METADOCMANAGER);
 		Global.seedsManager.saveSeeds();
 		Global.invertedIndexManager.saveInvertedIndex();
 		Global.saveConfig();

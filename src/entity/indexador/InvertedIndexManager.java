@@ -82,7 +82,7 @@ public class InvertedIndexManager extends Manager {
 		}
 	}
 	
-	private Index getIndexByName(String name) {
+	public Index getIndexByName(String name) {
 		Index index = new Index();
 		
 		try {

@@ -47,7 +47,8 @@ public class SeedsManager extends Manager{
 		if (result1 == null) {
 			
 			Global.log("No unvisited urls file is found.");
-			String[] urls = new String[] {"https://en.wikipedia.org/wiki/Category:Living_people"};
+			String[] urls = new String[] {"https://en.wikipedia.org/wiki/Category:Living_people", 
+					"https://en.wikipedia.org/wiki/barack_obama"};
 			Seeds.addUrls(new HashSet<String>(Arrays.asList(urls)));
 		} else if (result2 == null) {
 			

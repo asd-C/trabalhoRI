@@ -3,6 +3,7 @@ package indexador;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.stanford.nlp.ling.CoreAnnotations.AnswerAnnotation;
@@ -21,11 +22,13 @@ public class Analyser {
 		Doc doc = new Doc();
 		int size = 0;
 
+		Pattern pattern = Pattern.compile("\\p{Punct}");
+
 		for (List<CoreLabel> lc : list) {
 			for (CoreLabel label : lc) {
 				if (label.word().length() > 2 
 						&& !label.get(AnswerAnnotation.class).equals("O")
-						&& !Pattern.matches("\\p{Punct}", label.word())) {
+						&& !pattern.matcher(label.word()).find()) {
 					word = label.word();
 
 					if (indexs.containsKey(word)) {
