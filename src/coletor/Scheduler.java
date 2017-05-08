@@ -3,7 +3,7 @@ package coletor;
 import java.util.ArrayList;
 import java.util.Set;
 
-import entity.Seeds;
+import entity.coletor.Seeds;
 
 public class Scheduler {
 

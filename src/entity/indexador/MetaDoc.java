@@ -1,4 +1,4 @@
-package entity.coletor;
+package entity.indexador;
 
 public class MetaDoc {
 	private String url;

@@ -1,4 +1,4 @@
-package entity;
+package entity.indexador;
 
 import java.util.HashMap;
 

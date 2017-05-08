@@ -1,14 +1,11 @@
-package entity.coletor;
+package entity.indexador;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.codehaus.jackson.type.TypeReference;
 
-import entity.Doc;
 import global.Global;
 import global.Manager;
 

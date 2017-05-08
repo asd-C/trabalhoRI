@@ -1,4 +1,4 @@
-package entity;
+package entity.coletor;
 
 import java.io.IOException;
 import java.util.Arrays;

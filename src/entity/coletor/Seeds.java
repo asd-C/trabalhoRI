@@ -1,4 +1,4 @@
-package entity;
+package entity.coletor;
 
 import java.net.URI;
 import java.net.URISyntaxException;

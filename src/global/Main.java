@@ -1,5 +1,6 @@
 package global;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,8 +15,8 @@ import coletor.Fetcher;
 import coletor.FilterUrls;
 import coletor.Parser;
 import coletor.Scheduler;
-import entity.Doc;
-import entity.Seeds;
+import entity.coletor.Seeds;
+import entity.indexador.Doc;
 import indexador.Analyser;
 import utils.Timer;
 import utils.Writer;
@@ -100,7 +101,12 @@ public class Main {
 	
 	public static void main(String... args) {
 		Global.loadData();
-		Main.coletor();
-		
+		try {
+			System.out.println(Global.objectMapper.writeValueAsString(Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().get("Wikipedia")));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		Main.coletor();
 	}
 }

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import global.Global;
 import global.Manager;
 

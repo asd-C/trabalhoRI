@@ -7,10 +7,10 @@ import java.util.regex.Pattern;
 
 import edu.stanford.nlp.ling.CoreAnnotations.AnswerAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
-import entity.Doc;
-import entity.coletor.MetaDoc;
+import entity.indexador.Doc;
 import entity.indexador.Index;
 import entity.indexador.IndexDoc;
+import entity.indexador.MetaDoc;
 import global.Global;
 
 public class Analyser {
