@@ -9,9 +9,64 @@ import coletor.Classifier;
 import entity.coletor.SeedsManager;
 import entity.indexador.InvertedIndexManager;
 import entity.indexador.MetaDocManager;
+import utils.dataManager.TextCompressor;
 
 public class Global {
+	
+	private static long size_all_file_with_compression;
+	private static long size_all_file_without_compression;
 
+	public synchronized static long getSize_all_file_with_compression() {
+		return size_all_file_with_compression;
+	}
+
+	public synchronized static void setSize_all_file_with_compression(long size_all_file_with_compression) {
+		Global.size_all_file_with_compression = size_all_file_with_compression;
+	}
+
+	public synchronized static long getSize_all_file_without_compression() {
+		return size_all_file_without_compression;
+	}
+
+	public synchronized static void setSize_all_file_without_compression(long size_all_file_without_compression) {
+		Global.size_all_file_without_compression = size_all_file_without_compression;
+	}
+	
+	public synchronized static void addSize_all_file_without_compression(long increment) {
+		Global.size_all_file_without_compression += increment;
+	}
+
+	public static void sumSizeWithoutCompression() {
+		File dir = new File(pathFormat(dir_root, dir_document));
+		File[] files = dir.listFiles();
+		long sum = 0;
+		
+		for (File file : files) {
+			sum += TextCompressor.unzipToString(file.getAbsolutePath()).length();
+		}
+		
+		System.out.println(sum);
+	}
+	
+	public static void sumSizeWithCompression() {
+		File dir = new File(pathFormat(dir_root, dir_document));
+		File[] files = dir.listFiles();
+		long sum = 0;
+		
+		for (File file : files) {
+			sum += file.length();
+		}
+		
+		setSize_all_file_with_compression(sum);
+//		System.out.println(sum);
+	}
+	
+	public static void logSizeOfDocument() {
+		sumSizeWithCompression();
+		log("Size with compression: " + getSize_all_file_with_compression());
+		log("Size without compression: " + getSize_all_file_without_compression());
+	}
+	
 	public static ObjectMapper objectMapper;
 	public static Classifier classifier;
 	public static InvertedIndexManager invertedIndexManager;
@@ -23,6 +78,9 @@ public class Global {
 
 		createDir();
 
+		size_all_file_with_compression = 0l;
+		size_all_file_without_compression = 0l;
+		
 		objectMapper = new ObjectMapper();
 		classifier = new Classifier();
 		invertedIndexManager = new InvertedIndexManager();

@@ -90,6 +90,7 @@ public class Main {
 			System.out.println("Total of unvisited seeds: " + Seeds.getUnvisitedSeeds());
 			
 //			Seeds.showVisitedSeeds();
+			Global.logSizeOfDocument();
 			
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
@@ -101,12 +102,18 @@ public class Main {
 	
 	public static void main(String... args) {
 		Global.loadData();
-		try {
-			System.out.println(Global.objectMapper.writeValueAsString(Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().get("Wikipedia")));
-		} catch (IOException e) {
+//		Global.sumSizeWithCompression();
+//		Global.sumSizeWithoutCompression();
+////		try {
+//			Timer timer = new Timer();
+//			timer.startTimer(0);
+//			Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().get("Wikipedia");
+//			System.out.println(timer.finishTimer(0));
+//			System.out.println(Global.objectMapper.writeValueAsString(Global.invertedIndexManager.getInvertedIndex().getInvertedIndex().get("Wikipedia")));
+//		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-//		Main.coletor();
+//			e.printStackTrace();
+//		}
+		Main.coletor();
 	}
 }
