@@ -1,10 +1,7 @@
 package global;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -69,21 +66,23 @@ public class Main {
 			System.out.println("Number of new seeds: " + seeds.size());
 			
 			timer.startTimer(Timer.CLASSIFIER);
-			Global.classifier.process(contents);
+			contents = Global.classifier.process(contents);
 			timer.finishTimer(Timer.CLASSIFIER);
 			
 			timer.startTimer(Timer.WRITER);
-//			parser.getTextsFromPages(documents).forEach((k,v) -> System.out.println(k + v));
-			writer.saveWithCompression(parser.getTextsFromPages(documents));
+			writer.saveWithCompression(contents);
 			timer.finishTimer(Timer.WRITER);
-			List<Doc> docs = analyser.createIndexes(parser.getTextsFromPages(documents));
+			
+			timer.startTimer(timer.INDEXADOR);
+			List<Doc> docs = analyser.createIndexes(contents);
 			// finished create metadocs
 			// finished save documents
 			// TODO save urls
 			// TODO saving every 5 min
-			Global.metaDocManager.addMetaDocsFromDocs(docs);
 			Global.invertedIndexManager.addIndexs(analyser.createInvertedIndex(docs));
+			timer.finishTimer(timer.INDEXADOR);
 			
+			Global.metaDocManager.addMetaDocsFromDocs(docs);
 			scheduler.addNewUrls(seeds);
 			
 			System.out.println("Total of visited seeds: " + Seeds.getVisitedSeeds());
@@ -95,13 +94,19 @@ public class Main {
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
-		Global.metaDocManager.saveMetaDocs();
-		Global.seedsManager.saveSeeds();
-		Global.invertedIndexManager.saveInvertedIndex();
+		Global.saveStatus();
 	}
 	
 	public static void main(String... args) {
 		Global.loadData();
+//		try {
+//			Global.objectMapper.writeValue(new File(Global.pathFormat(Global.dir_root, "test")), new IndexDetail(0));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+//		Global.loadData();
 //		Global.sumSizeWithCompression();
 //		Global.sumSizeWithoutCompression();
 ////		try {

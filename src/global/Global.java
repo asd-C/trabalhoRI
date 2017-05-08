@@ -1,6 +1,7 @@
 package global;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -13,27 +14,8 @@ import utils.dataManager.TextCompressor;
 
 public class Global {
 	
-	private static long size_all_file_with_compression;
-	private static long size_all_file_without_compression;
-
-	public synchronized static long getSize_all_file_with_compression() {
-		return size_all_file_with_compression;
-	}
-
-	public synchronized static void setSize_all_file_with_compression(long size_all_file_with_compression) {
-		Global.size_all_file_with_compression = size_all_file_with_compression;
-	}
-
-	public synchronized static long getSize_all_file_without_compression() {
-		return size_all_file_without_compression;
-	}
-
-	public synchronized static void setSize_all_file_without_compression(long size_all_file_without_compression) {
-		Global.size_all_file_without_compression = size_all_file_without_compression;
-	}
-	
 	public synchronized static void addSize_all_file_without_compression(long increment) {
-		Global.size_all_file_without_compression += increment;
+		config.setSize_all_file_without_compression(config.getSize_all_file_without_compression() + increment);
 	}
 
 	public static void sumSizeWithoutCompression() {
@@ -57,16 +39,17 @@ public class Global {
 			sum += file.length();
 		}
 		
-		setSize_all_file_with_compression(sum);
+		config.setSize_all_file_with_compression(sum);
 //		System.out.println(sum);
 	}
 	
 	public static void logSizeOfDocument() {
 		sumSizeWithCompression();
-		log("Size with compression: " + getSize_all_file_with_compression());
-		log("Size without compression: " + getSize_all_file_without_compression());
+		log("Size with compression: " + config.getSize_all_file_with_compression());
+		log("Size without compression: " + config.getSize_all_file_without_compression());
 	}
 	
+	public static Config config;
 	public static ObjectMapper objectMapper;
 	public static Classifier classifier;
 	public static InvertedIndexManager invertedIndexManager;
@@ -78,14 +61,12 @@ public class Global {
 
 		createDir();
 
-		size_all_file_with_compression = 0l;
-		size_all_file_without_compression = 0l;
-		
 		objectMapper = new ObjectMapper();
 		classifier = new Classifier();
 		invertedIndexManager = new InvertedIndexManager();
 		metaDocManager = new MetaDocManager();
 		seedsManager = new SeedsManager();
+		config = new Config(null);
 	}
 
 	public final static String dir_root = "data";
@@ -94,12 +75,14 @@ public class Global {
 	public final static String dir_metadoc = "metadoc";
 	public final static String dir_seed = "seed";
 	public final static String dir_inverted_index = "inverted_index";
+	public final static String dir2_inverted_index = "inverted_index";
 
 	public final static String file_metadoc = "metadoc";
 	public final static String file_unvisited_seed = "unvisited_seed";
 	public final static String file_visited_seed = "visited_seed";
-	public final static String file_inverted_index = "inverted_index";
-
+	public final static String file_inverted_index_info = "inverted_index_info";
+	public final static String file_config = "config";
+	
 	private static void createDir() {
 		File file = new File(dir_root);
 		if (!file.exists()) {
@@ -121,6 +104,10 @@ public class Global {
 		if (!file.exists()) {
 			file.mkdirs();
 		}
+		file = new File(pathFormat(dir_root, dir_inverted_index, dir2_inverted_index));
+		if (!file.exists()) {
+			file.mkdirs();
+		}
 	}
 
 	public static String pathFormat(String... args) {
@@ -139,6 +126,56 @@ public class Global {
 
 	public static void log(String info) {
 		System.out.println(info + "\n");
+	}
+	
+	public static void saveConfig() {
+		try {
+			objectMapper.writeValue(new File(Global.pathFormat(Global.dir_root, Global.file_config)), config);
+		} catch (IOException e) {
+		}
+	}
+
+	public static void saveStatus() {
+		Global.metaDocManager.saveMetaDocs();
+		Global.seedsManager.saveSeeds();
+		Global.invertedIndexManager.saveInvertedIndex();
+		Global.saveConfig();
+	}
+}
+
+class Config {
+	
+	private long size_all_file_with_compression;
+	private long size_all_file_without_compression;
+
+	public Config() {
+	}
+	
+	public Config(String _null) {
+		try {
+			Config tmp = Global.objectMapper.readValue(new File(Global.pathFormat(Global.dir_root, Global.file_config)), Config.class);
+			size_all_file_with_compression = tmp.getSize_all_file_with_compression();
+			size_all_file_without_compression = tmp.getSize_all_file_without_compression();
+		} catch (IOException e) { 
+			size_all_file_with_compression = 0;
+			size_all_file_without_compression = 0;
+		}
+	}
+	
+	public long getSize_all_file_with_compression() {
+		return size_all_file_with_compression;
+	}
+
+	public void setSize_all_file_with_compression(long size_all_file_with_compression) {
+		this.size_all_file_with_compression = size_all_file_with_compression;
+	}
+
+	public long getSize_all_file_without_compression() {
+		return size_all_file_without_compression;
+	}
+
+	public void setSize_all_file_without_compression(long size_all_file_without_compression) {
+		this.size_all_file_without_compression = size_all_file_without_compression;
 	}
 
 }

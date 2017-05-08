@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InvertedIndex {
-	HashMap<String, Index> invertedIndex;
+	private HashMap<String, Index> invertedIndex;
 
 	public InvertedIndex() {
 		invertedIndex = new HashMap<String, Index>();

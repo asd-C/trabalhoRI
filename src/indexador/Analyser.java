@@ -23,7 +23,8 @@ public class Analyser {
 
 		for (List<CoreLabel> lc : list) {
 			for (CoreLabel label : lc) {
-				if (!label.get(AnswerAnnotation.class).equals("O")
+				if (label.word().length() > 2 
+						&& !label.get(AnswerAnnotation.class).equals("O")
 						&& !Pattern.matches("\\p{Punct}", label.word())) {
 					word = label.word();
 
