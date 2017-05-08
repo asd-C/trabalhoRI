@@ -2,7 +2,6 @@ package utils;
 
 import java.util.HashMap;
 
-import entity.coletor.Document;
 import global.Global;
 import utils.dataManager.TextCompressor;
 

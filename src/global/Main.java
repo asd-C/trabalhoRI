@@ -1,4 +1,4 @@
-package coletor;
+package global;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,9 +9,13 @@ import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
+import coletor.DomainUrls;
+import coletor.Fetcher;
+import coletor.FilterUrls;
+import coletor.Parser;
+import coletor.Scheduler;
 import entity.Doc;
 import entity.Seeds;
-import global.Global;
 import indexador.Analyser;
 import utils.Timer;
 import utils.Writer;

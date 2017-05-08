@@ -6,3 +6,4 @@ output.txt
 lib/classifier/
 output/*
 data/
+backup/
