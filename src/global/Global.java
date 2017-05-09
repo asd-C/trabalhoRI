@@ -1,7 +1,9 @@
 package global;
 
+import java.awt.List;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -9,6 +11,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import coletor.Classifier;
 import entity.coletor.SeedsManager;
 import entity.indexador.InvertedIndexManager;
+import entity.indexador.MetaDoc;
 import entity.indexador.MetaDocManager;
 import utils.Timer;
 import utils.dataManager.TextCompressor;
@@ -134,6 +137,16 @@ public class Global {
 			objectMapper.writeValue(new File(Global.pathFormat(Global.dir_root, Global.file_config)), config);
 		} catch (IOException e) {
 		}
+	}
+	
+	public static void getStatOfMetaDocs() {
+		java.util.List<MetaDoc> tmp =  metaDocManager.getMetaDocs();
+		int sum = 0;
+		for (MetaDoc x: tmp) {
+			sum += x.getSize();
+		}
+		
+		log("Tamanho medio dos documentos: " + sum/tmp.size());
 	}
 
 	public static void saveStatus() {
