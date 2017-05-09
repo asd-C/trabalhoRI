@@ -114,9 +114,13 @@ public class Seeds {
 					domains_unvisited_urls.put(domain, urls);
 				}
 				
-				// do not need check out if seed is duplicate, 
-				// because it uses Set.
-				urls.getUrls().add(seed);
+				if (domains_visited_urls.get(domain) == null 
+						|| domains_visited_urls.get(domain).getUrls() == null 
+						|| !domains_visited_urls.get(domain).getUrls().contains(seed)) {
+					// do not need check out if seed is duplicate, 
+					// because it uses Set.
+					urls.getUrls().add(seed);
+				}
 			} catch (URISyntaxException e) {}
 		}
 	}
