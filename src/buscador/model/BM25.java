@@ -21,11 +21,11 @@ public class BM25 {
 	public static int N = 10;
 	public static int AVGDL = 1000;
 	
-	public static double score(String[] query) {
+	public static HashMap<String, Double> score(String[] query) {
 		
-		List<Index> indexs = getIndexs(query);					// inverted index that only contain the tokens which are in query
-		List<String> docs = getDocs(indexs);					// all documents that contain indexes
-		HashMap<String, Double> scores = getScoreMap(docs);		// scores for each document, <Url, Score>
+		List<Index> indexs 				= getIndexs(query);					// inverted index that only contain the tokens which are in query
+		List<String> docs 				= getDocs(indexs);					// all documents that contain indexes
+		HashMap<String, Double> scores 	= getScoreMap(docs);		// scores for each document, <Url, Score>
 		
 		double score;
 		int fi;
@@ -39,24 +39,25 @@ public class BM25 {
 			score = scores.get(url);
 			
 			for (Index index : indexs) {
+
 				fi = findFi(index, url);
 				docLength = findDocLength(url);
 				nQueryI = index.getNi();
-				
+
 				score += bm25_aux(fi, docLength, AVGDL) * IDF(N, nQueryI);
 			}
-			
+
 			scores.put(url, score);
 		}
 
-		return 0.0;
+		return scores;
 	}
 	
-	// TODO
+	// 
 	public static int findDocLength(String url) {
 		MetaDocManager manager = Global.metaDocManager;
 		
-		return 0;
+		return manager.getSize(url);
 	}
 	
 	public static int findFi(Index index, String url) {
@@ -96,7 +97,7 @@ public class BM25 {
 		return scores;
 	}
 	
-	// TODO extract InvertedIndex using query 
+	// extract InvertedIndex using query 
 	public static List<Index> getIndexs(String[] query) {
 		
 		List<Index> indexs = new ArrayList<Index>();
@@ -109,13 +110,13 @@ public class BM25 {
 			if (index.getNi() != 0) {
 				indexs.add(index);
 			}
-			
+
 		}
 		
 		return indexs; 
 	}
 
-	// TODO extract Documents which are in the InvertedIndex
+	// extract Documents which are in the InvertedIndex
 	public static List<String> getDocs(List<Index> indexs) {
 		Set<String> urls = new HashSet<String>();
 		

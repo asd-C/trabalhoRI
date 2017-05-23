@@ -92,7 +92,7 @@ public class Main {
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
-		Global.saveStatus();
+//		Global.saveStatus();
 	}
 	
 	public static void timeToRetrieveIndex() {

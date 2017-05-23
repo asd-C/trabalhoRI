@@ -5,7 +5,6 @@ public class MetaDoc {
 	private int size; // numero total ocorrencia das entidades
 	public MetaDoc() {}
 	public MetaDoc(String url, int size) {
-		super();
 		this.url = url;
 		this.size = size;
 	}
