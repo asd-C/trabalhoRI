@@ -70,6 +70,7 @@ public class InvertedIndexManager extends Manager {
 				try {
 					// retrieve the old one if exists and add all in the new one 
 					Index tmp = getIndexByName(term);
+
 					index.addIndexDocs(tmp.getIndexDocs());
 					Global.objectMapper.writeValue(new File(path_dir + "/" + term), index);
 				} catch (IOException e) {
