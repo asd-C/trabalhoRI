@@ -9,6 +9,7 @@ import java.util.Set;
 import entity.indexador.Index;
 import entity.indexador.IndexDoc;
 import entity.indexador.InvertedIndexManager;
+import entity.indexador.MetaDoc;
 import entity.indexador.MetaDocManager;
 import global.Global;
 
@@ -18,14 +19,25 @@ public class BM25 {
 	public static double B = 0.5;
 
 	// The total number of documents 
-	public static int N = 10;
-	public static int AVGDL = 1000;
+	public static int N = 500;
+	public static int AVGDL = 100;
 	
 	public static HashMap<String, Double> score(String[] query) {
 		
 		List<Index> indexs 				= getIndexs(query);					// inverted index that only contain the tokens which are in query
 		List<String> docs 				= getDocs(indexs);					// all documents that contain indexes
 		HashMap<String, Double> scores 	= getScoreMap(docs);		// scores for each document, <Url, Score>
+		
+		N = Global.metaDocManager.getMetaDocs().size();
+		
+		int sum = 0;
+		for (MetaDoc metaDoc: Global.metaDocManager.getMetaDocs()) {
+			sum += metaDoc.getSize();
+		}
+		AVGDL =  sum / N;
+		
+		System.out.println("Number of Doc: " + N);
+		System.out.println("Avg of Doc length: " + AVGDL);
 		
 		double score;
 		int fi;
@@ -76,7 +88,9 @@ public class BM25 {
 	}
 	
 	public static double bm25_aux(int fi, int docLength, int avgdl) {
-		return (fi * (K + 1.0)) / (fi + K * (1 - B + B * (docLength * 1.0 / avgdl)));
+		double tmp1 = (fi * (K + 1.0));
+		double tmp2 = (fi + K * (1 - B + B * (docLength * 1.0 / avgdl))); 
+		return  tmp1 / tmp2;
 	}
 	
 	public static double IDF(int N, int nQueryI) {
@@ -133,6 +147,6 @@ public class BM25 {
 	}
 	
 	public static void main(String[] args) {
-		
+		System.out.println(bm25_aux(2, 10, 10));
 	}
 }

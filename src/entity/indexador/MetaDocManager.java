@@ -76,7 +76,9 @@ public class MetaDocManager extends Manager{
 	
 	public synchronized void loadMetaDocs() {
 		Global.log("Loading metadoc from " + path + "...");
-
+		
+		docsSize = new HashMap<>();
+		
 		String result = load(path);
 		
 		if (result == null) {

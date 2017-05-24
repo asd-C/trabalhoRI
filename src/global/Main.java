@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
+import buscador.model.BM25;
 import coletor.DomainUrls;
 import coletor.Fetcher;
 import coletor.FilterUrls;
@@ -42,7 +43,7 @@ public class Main {
 //		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 40) {
+		while (round < 2) {
 			
 			domainUrls = scheduler.generateNewSeeds("en.wikipedia.org");
 			
@@ -92,7 +93,7 @@ public class Main {
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
-//		Global.saveStatus();
+		Global.saveStatus();
 	}
 	
 	public static void timeToRetrieveIndex() {
@@ -105,7 +106,12 @@ public class Main {
 	public static void main(String... args) {
 		Global.loadData();
 //		Main.coletor();
+		String[] query = new String[]{"Robertson", "Pat", "Marion", "Gordon"};
+		HashMap<String, Double> scores = BM25.score(query);
+		scores.forEach((k,v) -> {
+			System.out.println(k + " : " + v);
+		});
 //		
-		timeToRetrieveIndex();
+//		timeToRetrieveIndex();
 	}
 }
