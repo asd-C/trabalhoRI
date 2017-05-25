@@ -126,6 +126,7 @@ public class InvertedIndexManager extends Manager {
 
 }
 
+// TODO ranking mechanism, save and load
 class InvertedIndexCache {
 	
 	public static int MAX_CACHE = 3000;
