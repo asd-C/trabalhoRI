@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.activity.InvalidActivityException;
+
 import global.Global;
 import global.Manager;
 
@@ -52,13 +54,14 @@ public class InvertedIndexManager extends Manager {
 		invertedIndexInfo.merge(invertedIndex);
 	}
 
-	private static String path_info = Global.pathFormat(Global.dir_root, Global.dir_inverted_index,
+	public static String path_info = Global.pathFormat(Global.dir_root, Global.dir_inverted_index,
 			Global.file_inverted_index_info);
 	
-	private static String path_dir = Global.pathFormat(Global.dir_root, Global.dir_inverted_index,
+	public static String path_dir = Global.pathFormat(Global.dir_root, Global.dir_inverted_index,
 			Global.dir2_inverted_index);
 
 	public synchronized void saveInvertedIndex() {
+
 		try {
 			Global.log("Saving inverted index to " + path_dir + "...");
 			
@@ -70,9 +73,13 @@ public class InvertedIndexManager extends Manager {
 				try {
 					// retrieve the old one if exists and add all in the new one 
 					Index tmp = getIndexByName(term);
-
-					index.addIndexDocs(tmp.getIndexDocs());
+					
+					if (tmp != null) {
+						index.addIndexDocs(tmp.getIndexDocs());
+					}
+					
 					Global.objectMapper.writeValue(new File(path_dir + "/" + term), index);
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -83,13 +90,11 @@ public class InvertedIndexManager extends Manager {
 		}
 	}
 	
-	public Index getIndexByName(String name) {
-		Index index = new Index();
+	public Index getIndexByName(String name) throws IOException{
 		
-		try {
-			index = Global.objectMapper.readValue(new File(path_dir + "/" + name), Index.class);
-		} catch (IOException e) { }
-		
+		Index index = null;
+		index = Global.objectMapper.readValue(new File(path_dir + "/" + name), Index.class);
+
 		return index;
 	}
 	
@@ -119,4 +124,74 @@ public class InvertedIndexManager extends Manager {
 		}
 	}
 
+}
+
+class InvertedIndexCache {
+	
+	public static int MAX_CACHE = 3000;
+	private int size = 0;
+	private HashMap<String, Index> invertedIndex;
+	private InvertedIndexManager parent;
+	
+	public InvertedIndexCache(InvertedIndexManager parent) {
+		invertedIndex = new HashMap<String, Index>();
+		this.parent = parent;
+	}
+
+	// update cache, if the requested index is retrieved successfully:
+	// 1. if cache is full, remove the less popular and put new one, 
+	// 2. if cache is not full, put new one.
+	private void update(String name) {
+		
+		Index newIndex = null;
+		
+		try {
+			newIndex = getIndex(name);
+		} catch (IOException e) {}
+		
+		if (newIndex != null) {
+			
+			invertedIndex.put(name, newIndex);
+
+			if (size == MAX_CACHE) { // if cache is full, remove less popular from cache.
+				invertedIndex.remove(getLessPopular());
+			} else {
+				size++;
+			}
+		}
+	}
+	
+	// get index from disk, given name
+	private Index getIndex(String name) throws IOException{
+		
+		Index index = null;
+		index = Global.objectMapper.readValue(new File(InvertedIndexManager.path_dir + "/" + name), Index.class);
+		
+		return index;
+	}
+	
+	private boolean existsIndex(String name) {
+		return (parent.getInvertedIndexInfo().getIndexsWithDetail().get(name) != null);
+	}
+	
+	// TODO get less popular index, remove and save it to disk
+	private String getLessPopular() {
+		return null;
+	}
+	
+	// get index by name, check it in cache, if it is not in cache, get from disk and add to cache.
+	public Index getIndexByName(String name) {
+		
+		if (existsIndex(name) == false) return new Index(); // if index does not exist, return empty Index.
+		
+		Index requested = invertedIndex.get(name);
+		if (requested != null) return requested; // if index exists in cache, return from cache.
+		
+		update(name); // index is not in cache, try to update.
+		
+		requested = invertedIndex.get(name); // if it failed to update, return null.
+		
+		return (requested == null ? new Index() : requested); // return empty index if it failed to update.
+
+	}
 }

@@ -1,5 +1,6 @@
 package buscador.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -120,7 +121,11 @@ public class BM25 {
 		
 		for (String token : query) {
 			
-			index = manager.getIndexByName(token);
+			try {
+				index = manager.getIndexByName(token);
+			} catch (IOException e) {
+				index = new Index();
+			}
 			if (index.getNi() != 0) {
 				indexs.add(index);
 			}

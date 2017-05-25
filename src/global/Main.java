@@ -1,5 +1,6 @@
 package global;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,12 +100,18 @@ public class Main {
 	public static void timeToRetrieveIndex() {
 		Timer timer = new Timer();
 		timer.startTimer(timer.ACCESSTIMETOINDEX);
-		Global.invertedIndexManager.getIndexByName("Wikipedia");
+		try {
+			Global.invertedIndexManager.getIndexByName("Wikipedia");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		timer.finishTimer(timer.ACCESSTIMETOINDEX);
 	}
 	
 	public static void main(String... args) {
 		Global.loadData();
+//		Global.saveStatus();
 //		Main.coletor();
 		String[] query = new String[]{"Robertson", "Pat", "Marion", "Gordon"};
 		HashMap<String, Double> scores = BM25.score(query);

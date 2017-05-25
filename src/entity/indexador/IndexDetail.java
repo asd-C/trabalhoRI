@@ -17,5 +17,9 @@ public class IndexDetail {
 	public void setCitation(int citation) {
 		this.citation = citation;
 	}
+	
+	public void increment() {
+		citation++;
+	}
 
 }
