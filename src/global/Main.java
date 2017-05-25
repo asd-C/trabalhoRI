@@ -44,7 +44,7 @@ public class Main {
 //		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 2) {
+		while (round < 4) {
 			
 			domainUrls = scheduler.generateNewSeeds("en.wikipedia.org");
 			
@@ -94,7 +94,6 @@ public class Main {
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
-		Global.saveStatus();
 	}
 	
 	public static void timeToRetrieveIndex() {
@@ -109,16 +108,37 @@ public class Main {
 		timer.finishTimer(timer.ACCESSTIMETOINDEX);
 	}
 	
-	public static void main(String... args) {
+	public static void collecting() {
+
 		Global.loadData();
-//		Global.saveStatus();
-//		Main.coletor();
-		String[] query = new String[]{"Robertson", "Pat", "Marion", "Gordon"};
+		Main.coletor();
+		Global.saveStatus();
+
+	}
+	
+	public static void querying(String[] query) {
+		
+		Global.loadData();
+		
+		Timer timer = new Timer();
+		timer.startTimer(timer.ACCESSTIMETOINDEX);
 		HashMap<String, Double> scores = BM25.score(query);
+		timer.finishTimer(timer.ACCESSTIMETOINDEX);
+		
+		timer.startTimer(timer.ACCESSTIMETOINDEX);
+		scores = BM25.score(query);
+		timer.finishTimer(timer.ACCESSTIMETOINDEX);
+		
 		scores.forEach((k,v) -> {
 			System.out.println(k + " : " + v);
 		});
-//		
-//		timeToRetrieveIndex();
+		
+	}
+	
+	public static void main(String... args) {
+
+		String[] query = new String[]{"Barack", "Obama", "Michael"};
+		querying(query);
+		
 	}
 }

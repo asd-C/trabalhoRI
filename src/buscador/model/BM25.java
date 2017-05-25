@@ -16,7 +16,7 @@ import global.Global;
 
 public class BM25 {
 
-	public static double K = 0.5;
+	public static double K = 1.2;
 	public static double B = 0.5;
 
 	// The total number of documents 
@@ -121,11 +121,8 @@ public class BM25 {
 		
 		for (String token : query) {
 			
-			try {
-				index = manager.getIndexByName(token);
-			} catch (IOException e) {
-				index = new Index();
-			}
+			index = manager.getIndexFromCache(token);
+
 			if (index.getNi() != 0) {
 				indexs.add(index);
 			}

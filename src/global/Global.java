@@ -64,7 +64,7 @@ public class Global {
 		createDir();
 
 		objectMapper = new ObjectMapper();
-//		classifier = new Classifier();
+		classifier = new Classifier();
 		invertedIndexManager = new InvertedIndexManager();
 		metaDocManager = new MetaDocManager();
 		seedsManager = new SeedsManager();
