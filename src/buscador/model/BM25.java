@@ -1,6 +1,5 @@
 package buscador.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,8 +15,8 @@ import global.Global;
 
 public class BM25 {
 
-	public static double K = 1.2;
-	public static double B = 0.5;
+	public static double K = 1.5d;
+	public static double B = 0.3d;
 
 	// The total number of documents 
 	public static int N = 500;
@@ -50,11 +49,11 @@ public class BM25 {
 			
 			url = docs.get(i);
 			score = scores.get(url);
+			docLength = findDocLength(url);
 			
 			for (Index index : indexs) {
 
 				fi = findFi(index, url);
-				docLength = findDocLength(url);
 				nQueryI = index.getNi();
 
 				score += bm25_aux(fi, docLength, AVGDL) * IDF(N, nQueryI);
@@ -79,7 +78,7 @@ public class BM25 {
 
 		for (int j = 0; j < docs.size(); j++) {
 
-			if (docs.get(j).getUrl() == url) {
+			if (docs.get(j).getUrl().equalsIgnoreCase(url)) {
 				return docs.get(j).getFi();
 			}
 
@@ -89,13 +88,16 @@ public class BM25 {
 	}
 	
 	public static double bm25_aux(int fi, int docLength, int avgdl) {
+		
 		double tmp1 = (fi * (K + 1.0));
 		double tmp2 = (fi + K * (1 - B + B * (docLength * 1.0 / avgdl))); 
-		return  tmp1 / tmp2;
+		return tmp1 / tmp2;
+		
 	}
 	
 	public static double IDF(int N, int nQueryI) {
 		double result = (N - nQueryI + 0.5) / (nQueryI + 0.5);
+		
 		
 		return Math.log(result)/Math.log(2);
 	}
@@ -134,6 +136,7 @@ public class BM25 {
 
 	// extract Documents which are in the InvertedIndex
 	public static List<String> getDocs(List<Index> indexs) {
+
 		Set<String> urls = new HashSet<String>();
 		
 		for (Index index : indexs) {
@@ -149,6 +152,6 @@ public class BM25 {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(bm25_aux(2, 10, 10));
+//		System.out.println(bm25_aux(2, 10, 10));
 	}
 }

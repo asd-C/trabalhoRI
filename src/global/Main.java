@@ -133,10 +133,10 @@ public class Main {
 	
 	public static void main(String... args) {
 
-		collecting();
+//		collecting();
 		
-//		String[] query = new String[]{"Barack", "Obama", "Michael"};
-//		querying(query);
+		String[] query = new String[]{"jonathan"};
+		querying(query);
 		
 	}
 }
