@@ -22,7 +22,7 @@ import utils.Writer;
 
 public class Main {
 	
-	public static void coletor() {
+	private static void coletor() {
 		HashMap<String, Document> documents;
 		Set<String> seeds;
 		ArrayList<String> new_seeds;
@@ -33,6 +33,7 @@ public class Main {
 		Fetcher.delay = 0;								// delay to fetch new page
 		Seeds.seeds_size = 50;								// number of new seeds are generated.
 		round = 0; 											// round counter
+		int MAX_ROUND = 1;
 		
 		Fetcher fetcher = new Fetcher();
 		Parser parser = new Parser();
@@ -44,56 +45,51 @@ public class Main {
 //		scheduler.addNewUrls(new HashSet<String>(Arrays.asList(urls)));
 		
 		// collecting from web
-		while (round < 4) {
+		while (round < MAX_ROUND) {
 			
 			domainUrls = scheduler.generateNewSeeds("en.wikipedia.org");
 			
 			System.out.println("\n-------------------- Round: " + round + " --------------------\n");
-			timer.startTimer(Timer.FILTERURLS);
-			new_seeds = FilterUrls.filtrar(domainUrls);
-			timer.finishTimer(Timer.FILTERURLS);
-			System.out.println("Number of seeds: " + new_seeds.size());
-			
-			timer.startTimer(Timer.FETCHER);
-			documents = fetcher.fetchAll(new_seeds);
-			timer.finishTimer(Timer.FETCHER);
-			System.out.println("Number of documents: " + documents.size());
-			
-			timer.startTimer(Timer.PARSER);
-			seeds = parser.getURLsFromPages(documents);
-			contents = parser.getTextsFromPages(documents);
-			timer.finishTimer(Timer.PARSER);
-			System.out.println("Number of new seeds: " + seeds.size());
-			
-			timer.startTimer(Timer.CLASSIFIER);
-			contents = Global.classifier.process(contents);
-			timer.finishTimer(Timer.CLASSIFIER);
-			
-			timer.startTimer(timer.INDEXADOR);
-			List<Doc> docs = analyser.createIndexes(contents);
-			// finished create metadocs
-			// finished save documents
-			// TODO save urls
-			// TODO saving every 5 min
-			Global.invertedIndexManager.addIndexs(analyser.createInvertedIndex(docs));
-			timer.finishTimer(timer.INDEXADOR);
-			
-			Global.metaDocManager.addMetaDocsFromDocs(docs);
-			scheduler.addNewUrls(seeds);
 
-			timer.startTimer(Timer.WRITER);
+			// get set of urls to fetch
+			new_seeds = FilterUrls.filtrar(domainUrls);
+			System.out.println("Number of seeds: " + new_seeds.size());
+
+			// fetch pages
+			documents = fetcher.fetchAll(new_seeds);
+			System.out.println("Number of documents: " + documents.size());
+
+			// get urls from pages
+			seeds = parser.getURLsFromPages(documents);
+			scheduler.addNewUrls(seeds);
+			System.out.println("Number of new seeds: " + seeds.size());
+
+			// get texts from pages
+			contents = parser.getTextsFromPages(documents);
+
+			// create indexes and add to inverted index
+			List<Doc> docs = analyser.createIndexes(contents);
+			Global.invertedIndexManager.addIndexs(analyser.createInvertedIndex(docs));
+			Global.metaDocManager.addMetaDocsFromDocs(docs);
+
+			// save texts of pages
 			writer.saveWithCompression(contents);
-			timer.finishTimer(Timer.WRITER);
-			
+
+
 			System.out.println("Total of visited seeds: " + Seeds.getVisitedSeeds());
 			System.out.println("Total of unvisited seeds: " + Seeds.getUnvisitedSeeds());
 			
 //			Seeds.showVisitedSeeds();
-			Global.logSizeOfDocument();
-			
+//			Global.logSizeOfDocument();
+
+			// save inverted index and clear to not overload memory
+			Global.invertedIndexManager.saveInvertedIndex();
+			Global.invertedIndexManager.clearInvertedIndex();
+
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
 		}
+
 	}
 	
 	public static void timeToRetrieveIndex() {
@@ -137,8 +133,10 @@ public class Main {
 	
 	public static void main(String... args) {
 
-		String[] query = new String[]{"Barack", "Obama", "Michael"};
-		querying(query);
+		collecting();
+		
+//		String[] query = new String[]{"Barack", "Obama", "Michael"};
+//		querying(query);
 		
 	}
 }

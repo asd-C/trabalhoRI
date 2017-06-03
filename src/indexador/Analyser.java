@@ -29,7 +29,7 @@ public class Analyser {
 				if (label.word().length() > 2 
 						&& !label.get(AnswerAnnotation.class).equals("O")
 						&& !pattern.matcher(label.word()).find()) {
-					word = label.word();
+					word = label.word().toLowerCase();
 
 					if (indexs.containsKey(word)) {
 						indexs.put(word, indexs.get(word) + 1);
@@ -54,6 +54,7 @@ public class Analyser {
 	}
 
 	public List<Doc> createIndexes(HashMap<String, String> contents) {
+
 		ArrayList<Doc> docs = new ArrayList<Doc>();
 		contents.forEach((key, value) -> docs.add(createIndex(key, value)));
 
@@ -61,6 +62,7 @@ public class Analyser {
 	}
 	
 	public List<MetaDoc> createMetaDoc(List<Doc> docs) {
+
 		ArrayList<MetaDoc> metaDocs = new ArrayList<>();
 		docs.forEach((doc) -> {
 			metaDocs.add(new MetaDoc(doc.getUrl(), doc.getSize()));
@@ -74,6 +76,7 @@ public class Analyser {
 
 		for (Doc doc : docs) {
 			doc.getIndexs().forEach((key, value) -> {
+				
 				if (!indexs.containsKey(key)) {
 					Index index = new Index(key, null, 0);
 

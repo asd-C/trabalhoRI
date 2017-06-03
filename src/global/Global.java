@@ -148,13 +148,11 @@ public class Global {
 	}
 
 	public static void saveStatus() {
-		Timer timer = new Timer();
-		timer.startTimer(Timer.METADOCMANAGER);
+		
 		Global.metaDocManager.saveMetaDocs();
-		timer.finishTimer(Timer.METADOCMANAGER);
 		Global.seedsManager.saveSeeds();
-		Global.invertedIndexManager.saveInvertedIndex();
 		Global.saveConfig();
+
 	}
 }
 

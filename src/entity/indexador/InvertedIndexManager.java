@@ -102,10 +102,16 @@ public class InvertedIndexManager extends Manager {
 					e.printStackTrace();
 				}
 			});
+
 //			save(Global.objectMapper.writeValueAsString(invertedIndexInfo), path); // saving with compression
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public synchronized void  clearInvertedIndex() {
+		// clear up to avoid overload memory
+		invertedIndex = new InvertedIndex();
 	}
 
 	public synchronized void loadInvertedIndex() {
@@ -136,8 +142,7 @@ class InvertedIndexCache {
 	private HashMap<String, Integer> rates;
 	
 	public InvertedIndexCache(InvertedIndexManager parent) {
-		invertedIndex = new HashMap<String, Index>();
-		rates = new HashMap<String, Integer>();
+		initialize();
 		this.parent = parent;
 	}
 
@@ -249,5 +254,13 @@ class InvertedIndexCache {
 				e.printStackTrace();
 			}
 		});
+		
+		initialize();
+
+	}
+	
+	public void initialize() {
+		invertedIndex = new HashMap<String, Index>();
+		rates = new HashMap<String, Integer>();
 	}
 }
