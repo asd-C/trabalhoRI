@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
@@ -125,9 +126,13 @@ public class Main {
 		scores = BM25.score(query);
 		timer.finishTimer(timer.ACCESSTIMETOINDEX);
 		
-		scores.forEach((k,v) -> {
-			System.out.println(k + " : " + v);
-		});
+//		scores = BM25.getTopN(5, scores);
+		ArrayList<String> topN = BM25.getTopNList(5, scores);
+		
+		
+		for (int i = 0; i < topN.size(); i++) {
+			System.out.println(topN.get(i) + " : " + scores.get(topN.get(i)));
+		}
 		
 	}
 	

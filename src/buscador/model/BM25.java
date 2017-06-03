@@ -1,9 +1,13 @@
 package buscador.model;
 
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import java.util.Set;
 
 import entity.indexador.Index;
@@ -98,7 +102,6 @@ public class BM25 {
 	public static double IDF(int N, int nQueryI) {
 		double result = (N - nQueryI + 0.5) / (nQueryI + 0.5);
 		
-		
 		return Math.log(result)/Math.log(2);
 	}
 	
@@ -151,7 +154,69 @@ public class BM25 {
 		return urlsList;
 	}
 	
-	public static void main(String[] args) {
-//		System.out.println(bm25_aux(2, 10, 10));
+	public static HashMap<String, Double> getTopN(int n, HashMap<String, Double> scores) {
+		HashMap<String, Double> scoresTopN = new HashMap<>();
+		
+		Double max; 
+		String max_idx;
+		
+		for (int i = 0; i < n; i++) {
+
+			max = Double.MIN_VALUE;
+			max_idx = null;
+
+			for (Map.Entry<String, Double> entry: scores.entrySet()) {
+
+				if (entry.getValue() > max) {
+
+					max = entry.getValue();
+					max_idx = entry.getKey();
+		
+				}
+
+			}
+
+			if (max_idx != null) {
+				scoresTopN.put(max_idx, scores.remove(max_idx));
+			}
+
+		}
+
+		return scoresTopN;
+	}
+	
+	public static ArrayList<String> getTopNList(int n, HashMap<String, Double> scores) {
+
+		ArrayList<String> topN = new ArrayList<>();
+		
+		HashMap<String, Double> scoresCopy = new HashMap<>(scores);
+		
+		Double max; 
+		String max_idx;
+		
+		for (int i = 0; i < n; i++) {
+
+			max = Double.MIN_VALUE;
+			max_idx = null;
+
+			for (Map.Entry<String, Double> entry: scoresCopy.entrySet()) {
+
+				if (entry.getValue() > max) {
+
+					max = entry.getValue();
+					max_idx = entry.getKey();
+		
+				}
+
+			}
+
+			if (max_idx != null) {
+				topN.add(max_idx);
+				scoresCopy.remove(max_idx);
+			}
+
+		}
+
+		return topN;
 	}
 }
