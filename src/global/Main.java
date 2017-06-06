@@ -31,10 +31,10 @@ public class Main {
 		DomainUrls domainUrls;
 		HashMap<String, String> contents;
 		
-		Fetcher.delay = 0;								// delay to fetch new page
-		Seeds.seeds_size = 50;								// number of new seeds are generated.
+		Fetcher.delay = 100;								// delay to fetch new page
+		Seeds.seeds_size = 100;								// number of new seeds are generated.
 		round = 0; 											// round counter
-		int MAX_ROUND = 1;
+		int MAX_ROUND = 2000;
 		
 		Fetcher fetcher = new Fetcher();
 		Parser parser = new Parser();
@@ -86,6 +86,8 @@ public class Main {
 			// save inverted index and clear to not overload memory
 			Global.invertedIndexManager.saveInvertedIndex();
 			Global.invertedIndexManager.clearInvertedIndex();
+			
+			Global.saveStatus();
 
 			System.out.println("\n-------------------- End of Round " + round + " --------------------\n");
 			round++;
@@ -109,22 +111,14 @@ public class Main {
 
 		Global.loadData();
 		Main.coletor();
-		Global.saveStatus();
 
 	}
 	
 	public static void querying(String[] query) {
 		
-		Global.loadData();
+		Global.loadDataForSearch();
 		
-		Timer timer = new Timer();
-		timer.startTimer(timer.ACCESSTIMETOINDEX);
 		HashMap<String, Double> scores = BM25.score(query);
-		timer.finishTimer(timer.ACCESSTIMETOINDEX);
-		
-		timer.startTimer(timer.ACCESSTIMETOINDEX);
-		scores = BM25.score(query);
-		timer.finishTimer(timer.ACCESSTIMETOINDEX);
 		
 //		scores = BM25.getTopN(5, scores);
 		ArrayList<String> topN = BM25.getTopNList(5, scores);
@@ -138,10 +132,10 @@ public class Main {
 	
 	public static void main(String... args) {
 
-//		collecting();
+		collecting();
 		
-		String[] query = new String[]{"jonathan"};
-		querying(query);
+//		String[] query = new String[]{"obama", "barack"};
+//		querying(query);
 		
 	}
 }

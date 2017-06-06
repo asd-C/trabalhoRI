@@ -19,8 +19,8 @@ import global.Global;
 
 public class BM25 {
 
-	public static double K = 1.5d;
-	public static double B = 0.3d;
+	public static double K = 1d;
+	public static double B = 0.5d;
 
 	// The total number of documents 
 	public static int N = 500;
@@ -101,8 +101,12 @@ public class BM25 {
 	
 	public static double IDF(int N, int nQueryI) {
 		double result = (N - nQueryI + 0.5) / (nQueryI + 0.5);
-		
-		return Math.log(result)/Math.log(2);
+		result = Math.log(result)/Math.log(2);
+		if (result <= 1) {
+			return 1.0d;
+		} else {
+			return result;
+		}
 	}
 	
 	// extract urls from indexDocs and put into map with 0 score

@@ -70,6 +70,12 @@ public class Global {
 		seedsManager = new SeedsManager();
 		config = new Config(null);
 	}
+	
+	public static void loadDataForSearch() {
+		objectMapper = new ObjectMapper();
+		invertedIndexManager = new InvertedIndexManager();
+		metaDocManager = new MetaDocManager();
+	}
 
 	public final static String dir_root = "data";
 
