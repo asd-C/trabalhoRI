@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
+import buscador.Buscador;
 import buscador.model.BM25;
 import coletor.DomainUrls;
 import coletor.Fetcher;
@@ -17,13 +17,13 @@ import coletor.Parser;
 import coletor.Scheduler;
 import entity.coletor.Seeds;
 import entity.indexador.Doc;
+import global.entity.DocResponse;
 import indexador.Analyser;
 import utils.Reader;
 import utils.Timer;
 import utils.Writer;
-import utils.dataManager.TextCompressor;
 
-public class Main {
+public class Main{
 	
 	private static void coletor() {
 		HashMap<String, Document> documents;
@@ -97,39 +97,11 @@ public class Main {
 
 	}
 	
-	public static void timeToRetrieveIndex() {
-		Timer timer = new Timer();
-		timer.startTimer(timer.ACCESSTIMETOINDEX);
-		try {
-			Global.invertedIndexManager.getIndexByName("Wikipedia");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		timer.finishTimer(timer.ACCESSTIMETOINDEX);
-	}
-	
 	public static void collecting() {
 
 		Global.loadData();
 		Main.coletor();
 
-	}
-	
-	public static void querying(String[] query) {
-		
-		Global.loadDataForSearch();
-		
-		HashMap<String, Double> scores = BM25.score(query);
-		
-//		scores = BM25.getTopN(5, scores);
-		ArrayList<String> topN = BM25.getTopNList(5, scores);
-		
-		
-		for (int i = 0; i < topN.size(); i++) {
-			System.out.println(topN.get(i) + " : " + Reader.getFileByUrl(topN.get(i)));
-		}
-		
 	}
 	
 	public static void main(String... args) {
@@ -139,7 +111,10 @@ public class Main {
 //		String content =  Reader.getFileByUrl("https://en.wikipedia.org/wiki/barack_obama");
 //		System.out.println(content);
 		String[] query = new String[]{"obama", "barack"};
-		querying(query);
+		MainInterface mainInterface = new Buscador();
+		mainInterface.querying(query).forEach(a -> {
+			System.out.println(a.getUrl() + " : " + a.getDocument());
+		});;
 		
 	}
 }

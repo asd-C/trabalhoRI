@@ -15,7 +15,6 @@ public class Scheduler {
 	public void addNewUrls(Set<String> urls) {
 		Seeds.addUrls(urls);
 	}
-	
 
 	/**
 	 * Gera uma nova lista de urls para coletar.
@@ -25,11 +24,11 @@ public class Scheduler {
 	public ArrayList<String> generateNewSeedsList() {
 		return Seeds.generateNewSeeds().getUrls();
 	}
-	
+
 	public DomainUrls generateNewSeeds() {
 		return Seeds.generateNewSeeds();
 	}
-	
+
 	public DomainUrls generateNewSeeds(String domain) {
 		return Seeds.generateNewSeeds(domain);
 	}

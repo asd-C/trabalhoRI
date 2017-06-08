@@ -1,10 +1,8 @@
 package buscador.model;
 
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +37,6 @@ public class BM25 {
 			sum += metaDoc.getSize();
 		}
 		AVGDL =  sum / N;
-		
-		System.out.println("Number of Doc: " + N);
-		System.out.println("Avg of Doc length: " + AVGDL);
 		
 		double score;
 		int fi;
