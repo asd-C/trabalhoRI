@@ -95,7 +95,9 @@ public class BM25 {
 	}
 	
 	public static double IDF(int N, int nQueryI) {
+//		if (1.0*N/nQueryI < 0.7) N *= 5;
 		double result = (N - nQueryI + 0.5) / (nQueryI + 0.5);
+
 		result = Math.log(result)/Math.log(2);
 		if (result <= 1) {
 			return 1.0d;

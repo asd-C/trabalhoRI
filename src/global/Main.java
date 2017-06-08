@@ -103,7 +103,7 @@ public class Main{
 		Main.coletor();
 
 	}
-	
+
 	public static void main(String... args) {
 
 //		collecting();
@@ -116,7 +116,5 @@ public class Main{
 //		mainInterface.queryingTopN("Richard Nixon", 5).forEach(a -> {
 //			System.out.println(a.getUrl() + " : " + a.getDocument());
 //		});;
-		
-		
 	}
 }
