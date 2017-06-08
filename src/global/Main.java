@@ -110,11 +110,13 @@ public class Main{
 		
 //		String content =  Reader.getFileByUrl("https://en.wikipedia.org/wiki/barack_obama");
 //		System.out.println(content);
-		String[] query = new String[]{"obama", "barack"};
+		String[] query = new String[]{"richard", "nixon"};
 		MainInterface mainInterface = new Buscador();
-		mainInterface.querying(query).forEach(a -> {
-			System.out.println(a.getUrl() + " : " + a.getDocument());
-		});;
+		mainInterface.querying("Richard Nixon");
+//		mainInterface.queryingTopN("Richard Nixon", 5).forEach(a -> {
+//			System.out.println(a.getUrl() + " : " + a.getDocument());
+//		});;
+		
 		
 	}
 }

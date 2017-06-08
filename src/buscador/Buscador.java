@@ -15,15 +15,17 @@ public class Buscador implements MainInterface{
 		Global.loadDataForSearch();
 	}
 	
-	public ArrayList<DocResponse> querying(String[] query) {
+	public ArrayList<DocResponse> queryingTopN(String[] query, int n) {
 		
 		ArrayList<DocResponse> result = new ArrayList<DocResponse>();
 		
 		HashMap<String, Double> scores = BM25.score(query);
 		
-		ArrayList<String> topN = BM25.getTopNList(5, scores);
+		ArrayList<String> topN = BM25.getTopNList(n, scores);
 		
-		for (int i = 0; i < topN.size(); i++) {
+		int stop_point = (topN.size() < n) ? topN.size() : n;
+		
+		for (int i = 0; i < stop_point; i++) {
 			result.add(new DocResponse(topN.get(i), Reader.getFileByUrl(topN.get(i))));
 		}
 		
@@ -31,18 +33,29 @@ public class Buscador implements MainInterface{
 	
 	}
 	
-	public ArrayList<DocResponse> querying(String query) {
+	public ArrayList<DocResponse> queryingTopN(String query, int n) {
 		
 		String[] terms = query.toLowerCase().split("[\\p{Punct}\\s]+");
 		ArrayList<String> filtered = new ArrayList<>();
 		
 		for (String string : terms) {
-			if (terms.length > 2) filtered.add(string);
+			if (string.length() > 2) filtered.add(string);
 		}
 		
 		String[] stockArr = new String[filtered.size()];
 		stockArr = filtered.toArray(stockArr);
 		
-		return querying(stockArr);
+		return queryingTopN(stockArr, n);
+
+	}
+
+	@Override
+	public ArrayList<DocResponse> querying(String query) {
+		return queryingTopN(query, Integer.MAX_VALUE);
+	}
+
+	@Override
+	public ArrayList<DocResponse> querying(String[] query) {
+		return queryingTopN(query, Integer.MAX_VALUE);
 	}
 }
