@@ -15,6 +15,7 @@ public class Buscador implements MainInterface{
 		Global.loadDataForSearch();
 	}
 	
+	@Override
 	public ArrayList<DocResponse> queryingTopN(String[] query, int n) {
 		
 		ArrayList<DocResponse> result = new ArrayList<DocResponse>();
@@ -33,6 +34,7 @@ public class Buscador implements MainInterface{
 	
 	}
 	
+	@Override
 	public ArrayList<DocResponse> queryingTopN(String query, int n) {
 		
 		String[] terms = query.toLowerCase().split("[\\p{Punct}\\s]+");
